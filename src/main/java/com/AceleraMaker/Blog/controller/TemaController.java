@@ -31,7 +31,7 @@ public class TemaController {
 
     // Atualizar um tema existente
     @PutMapping("/{id}")
-    public ResponseEntity<?> atualizarTema(@PathVariable Long id, @RequestBody Tema temaAtualizado) {
+    public ResponseEntity<Object> atualizarTema(@PathVariable Long id, @RequestBody Tema temaAtualizado) {
         Optional<Tema> tema = temaService.atualizarTema(id, temaAtualizado);
         if (tema.isPresent()) {
             return ResponseEntity.ok(tema.get());
