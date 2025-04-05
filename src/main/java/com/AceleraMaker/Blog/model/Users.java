@@ -17,7 +17,7 @@ import java.math.BigInteger;
 public class Users {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private BigInteger ID;
 
     private String nome;
