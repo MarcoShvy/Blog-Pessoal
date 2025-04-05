@@ -30,6 +30,10 @@ public class Postagem {
     private LocalDateTime data;
 
     @ManyToOne
+    @JoinColumn(name = "tema_id")
+    private Tema tema;
+
+    @ManyToOne
     @JoinColumn(name = "usuario_id")
     private Users usuario_id;
 }
