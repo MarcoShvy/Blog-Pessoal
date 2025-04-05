@@ -1,31 +1,32 @@
 package com.AceleraMaker.Blog.controller;
 
 import com.AceleraMaker.Blog.model.Users;
-import com.AceleraMaker.Blog.repository.UserRepository;
 import com.AceleraMaker.Blog.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
-@Controller
-@RequestMapping("api/usuarios")
+@RestController
+@RequestMapping("/api/usarios")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class UserController {
 
     @Autowired
-    private UserService usuarioService;
+    private UserService userService;
 
-    // POST /api/usuarios - cadastrar novo usuário
-    @PostMapping
-    public ResponseEntity<Users> cadastrarUsuario(@RequestBody Users usuario) {
-        Optional<Users> novoUsuario = usuarioService.cadastrarUsuario(usuario);
-        return novoUsuario
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.badRequest().build());
+    // POST /usuarios/cadastrar
+    @PostMapping("/cadastrar")
+    public ResponseEntity<Object> cadastrarUsuario(@RequestBody Users usuario) {
+        Optional<Users> novoUsuario = userService.cadastrarUsuario(usuario);
+
+        if (novoUsuario.isPresent()) {
+            return ResponseEntity.status(HttpStatus.CREATED).body(novoUsuario.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Usuário já existente");
+        }
     }
+
 }

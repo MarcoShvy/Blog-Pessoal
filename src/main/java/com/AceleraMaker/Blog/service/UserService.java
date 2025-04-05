@@ -1,6 +1,6 @@
 package com.AceleraMaker.Blog.service;
 
-import com.AceleraMaker.Blog.config.JwtService;
+import com.AceleraMaker.Blog.security.JwtService;
 import com.AceleraMaker.Blog.dto.UsuarioLogin;
 import com.AceleraMaker.Blog.model.Users;
 import com.AceleraMaker.Blog.repository.UserRepository;
@@ -26,10 +26,10 @@ public class UserService {
     private UserRepository userRepository;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private JwtService jwtService;
 
     @Autowired
-    private JwtService jwtService;
+    private PasswordEncoder passwordEncoder;
 
     // Cadastrar usuário
     public Optional<Users> cadastrarUsuario(Users usuario) {
@@ -41,16 +41,7 @@ public class UserService {
         return Optional.of(userRepository.save(usuario));
     }
 
-    // Atualizar usuário
-    public Optional<Users> atualizarUsuario(Users usuario) {
-        if (userRepository.findById(usuario.getID()).isEmpty()) {
-            return Optional.empty(); // não existe
-        }
-
-        usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
-        return Optional.of(userRepository.save(usuario));
-    }
-
+    // Autenticar usuário
     public Optional<UsuarioLogin> autenticarUsuario(UsuarioLogin usuarioLogin) {
         Optional<Users> usuario = userRepository.findByUsuario(usuarioLogin.usuario());
 
@@ -60,8 +51,7 @@ public class UserService {
             if (passwordEncoder.matches(usuarioLogin.senha(), user.getSenha())) {
                 String token = jwtService.generateToken(user.getUsuario());
 
-
-                UsuarioLogin loginResposta = new UsuarioLogin(
+                UsuarioLogin loginComToken = new UsuarioLogin(
                         user.getID(),
                         user.getNome(),
                         user.getUsuario(),
@@ -70,15 +60,10 @@ public class UserService {
                         token
                 );
 
-                return Optional.of(loginResposta);
+                return Optional.of(loginComToken);
             }
         }
 
         return Optional.empty();
-    }
-
-    // Excluir usuário
-    public void deletarUsuario(Long id) {
-        userRepository.deleteById(id);
     }
 }

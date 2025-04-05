@@ -1,18 +1,14 @@
-package com.AceleraMaker.Blog.config;
-
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+package com.AceleraMaker.Blog.security;
+import io.jsonwebtoken.*;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
-
 @Service
 public class JwtService {
-    private String SECRET_KEY = "aceleramakerdesafio";
 
-    private final long EXPIRATION_TIME = 86400000L; // 24 horas
+    private static final String SECRET_KEY = "acelerarMakerChave";
+    private static final long EXPIRATION_TIME = 86400000; // 1 dia
 
     public String generateToken(String username) {
         return Jwts.builder()
@@ -23,19 +19,20 @@ public class JwtService {
                 .compact();
     }
 
-    public String extractUsername(String token) {
-        return getClaims(token).getSubject();
-    }
-
     public boolean isTokenValid(String token) {
-        Claims claims = getClaims(token);
-        return claims.getExpiration().after(new Date());
+        try {
+            Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
-    private Claims getClaims(String token) {
+    public String extractUsername(String token) {
         return Jwts.parser()
                 .setSigningKey(SECRET_KEY)
                 .parseClaimsJws(token)
-                .getBody();
+                .getBody()
+                .getSubject();
     }
 }
