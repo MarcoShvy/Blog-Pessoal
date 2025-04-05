@@ -1,5 +1,6 @@
 package com.AceleraMaker.Blog.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,9 +32,11 @@ public class Postagem {
 
     @ManyToOne
     @JoinColumn(name = "tema_id")
+    @JsonIgnoreProperties("postagem")
     private Tema tema;
 
     @ManyToOne
     @JoinColumn(name = "usuario_id")
-    private Users usuario_id;
+    @JsonIgnoreProperties("postagem")
+    private Users usuario;
 }

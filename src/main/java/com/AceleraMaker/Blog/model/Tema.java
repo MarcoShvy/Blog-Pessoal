@@ -1,15 +1,14 @@
 package com.AceleraMaker.Blog.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 
 @Getter
 @Setter
@@ -24,4 +23,8 @@ public class Tema {
     private BigInteger ID;
 
     private String descricao;
+
+    @OneToMany(mappedBy = "tema", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties("tema")
+    private ArrayList<Postagem> postagems;
 }
