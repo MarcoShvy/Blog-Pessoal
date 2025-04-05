@@ -51,12 +51,46 @@ public class UserService {
             if (senhaCorreta) {
                 String token = jwtService.generateToken(usuario.get());
 
-                // Cria um novo UserLogin com o token e senha oculta
                 UsuarioLogin autenticado = new UsuarioLogin(userLogin.usuario(), null, token);
                 return Optional.of(autenticado);
             }
         }
 
         return Optional.empty();
+    }
+
+    // Atualizar usuário
+
+    public Optional<Users> atualizarUsuario(Long id, Users usuarioAtualizado) {
+        Optional<Users> usuarioExistente = userRepository.findById(id);
+
+        if (usuarioExistente.isPresent()) {
+            Users usuario = usuarioExistente.get();
+
+            usuario.setNome(usuarioAtualizado.getNome());
+            usuario.setUsuario(usuarioAtualizado.getUsuario());
+
+            if (usuarioAtualizado.getSenha() != null && !usuarioAtualizado.getSenha().isEmpty()) {
+                usuario.setSenha(passwordEncoder.encode(usuarioAtualizado.getSenha()));
+            }
+
+            return Optional.of(userRepository.save(usuario));
+        }
+
+        return Optional.empty();
+    }
+
+
+    // Deletar usuário
+
+    public boolean deletarUsuario(Long id) {
+        Optional<Users> usuarioExistente = userRepository.findById(id);
+
+        if (usuarioExistente.isPresent()) {
+            userRepository.deleteById(id);
+            return true;
+        }
+
+        return false;
     }
 }

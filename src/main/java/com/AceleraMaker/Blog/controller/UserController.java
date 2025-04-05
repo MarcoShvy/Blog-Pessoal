@@ -3,7 +3,6 @@ package com.AceleraMaker.Blog.controller;
 import com.AceleraMaker.Blog.dto.UsuarioLogin;
 import com.AceleraMaker.Blog.model.Users;
 import com.AceleraMaker.Blog.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,11 +14,14 @@ import java.util.Optional;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class UserController {
 
-    @Autowired
+
     private UserService userService;
 
-    // POST /usuarios/cadastrar
-    @PostMapping("/cadastrar")
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
+
+    @PostMapping("/register")
     public ResponseEntity<Object> cadastrarUsuario(@RequestBody Users usuario) {
         Optional<Users> novoUsuario = userService.cadastrarUsuario(usuario);
 
@@ -40,4 +42,27 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuário ou senha inválidos");
         }
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Object> atualizarUsuario(@PathVariable Long id, @RequestBody Users usuarioAtualizado) {
+        Optional<Users> usuario = userService.atualizarUsuario(id, usuarioAtualizado);
+
+        if (usuario.isPresent()) {
+            return ResponseEntity.ok(usuario.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado");
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> deletarUsuario(@PathVariable Long id) {
+        boolean deletado = userService.deletarUsuario(id);
+
+        if (deletado) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado");
+        }
+    }
+
 }

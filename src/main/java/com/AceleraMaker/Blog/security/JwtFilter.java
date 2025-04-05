@@ -2,7 +2,6 @@ package com.AceleraMaker.Blog.security;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -14,11 +13,14 @@ import java.io.IOException;
 @Component
 public class JwtFilter extends OncePerRequestFilter {
 
-    @Autowired
     private JwtService jwtService;
 
-    @Autowired
     private CustomUserDetails userDetailsService;
+
+    public JwtFilter(JwtService jwtService, CustomUserDetails customUserDetails) {
+        this.jwtService = jwtService;
+        this.userDetailsService = customUserDetails;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
