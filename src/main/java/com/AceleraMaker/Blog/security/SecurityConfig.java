@@ -21,12 +21,16 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf(csrf -> csrf.disable()) // ✅ forma moderna e compatível
+                .csrf(csrf -> csrf.disable())
+                .headers(headers -> headers
+                        .defaultsDisabled()
+                        .frameOptions(frame -> frame.sameOrigin())
+                )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/usuarios/login", "/api/usuarios").permitAll()
+                        .requestMatchers("/api/usuarios/login", "/api/usuarios", "/h2-console/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
