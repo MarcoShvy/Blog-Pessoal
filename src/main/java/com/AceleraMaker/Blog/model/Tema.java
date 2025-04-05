@@ -9,6 +9,7 @@ import lombok.Setter;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -26,5 +27,5 @@ public class Tema {
 
     @OneToMany(mappedBy = "tema", cascade = CascadeType.ALL)
     @JsonIgnoreProperties("tema")
-    private ArrayList<Postagem> postagems;
+    private List<Postagem> postagems;
 }

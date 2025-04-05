@@ -42,25 +42,18 @@ public class UserService {
     }
 
     // Autenticar usuário
-    public Optional<UsuarioLogin> autenticarUsuario(UsuarioLogin usuarioLogin) {
-        Optional<Users> usuario = userRepository.findByUsuario(usuarioLogin.usuario());
+    public Optional<UsuarioLogin> autenticarUsuario(UsuarioLogin userLogin) {
+        Optional<Users> usuario = userRepository.findByUsuario(userLogin.usuario());
 
         if (usuario.isPresent()) {
-            Users user = usuario.get();
+            boolean senhaCorreta = passwordEncoder.matches(userLogin.senha(), usuario.get().getSenha());
 
-            if (passwordEncoder.matches(usuarioLogin.senha(), user.getSenha())) {
-                String token = jwtService.generateToken(user.getUsuario());
+            if (senhaCorreta) {
+                String token = jwtService.generateToken(usuario.get());
 
-                UsuarioLogin loginComToken = new UsuarioLogin(
-                        user.getID(),
-                        user.getNome(),
-                        user.getUsuario(),
-                        null,
-                        user.getFoto(),
-                        token
-                );
-
-                return Optional.of(loginComToken);
+                // Cria um novo UserLogin com o token e senha oculta
+                UsuarioLogin autenticado = new UsuarioLogin(userLogin.usuario(), null, token);
+                return Optional.of(autenticado);
             }
         }
 

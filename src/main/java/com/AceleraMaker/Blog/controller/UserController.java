@@ -1,5 +1,6 @@
 package com.AceleraMaker.Blog.controller;
 
+import com.AceleraMaker.Blog.dto.UsuarioLogin;
 import com.AceleraMaker.Blog.model.Users;
 import com.AceleraMaker.Blog.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,4 +30,14 @@ public class UserController {
         }
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<Object> login(@RequestBody UsuarioLogin userLogin) {
+        Optional<UsuarioLogin> userAuth = userService.autenticarUsuario(userLogin);
+
+        if (userAuth.isPresent()) {
+            return ResponseEntity.ok(userAuth.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuário ou senha inválidos");
+        }
+    }
 }
