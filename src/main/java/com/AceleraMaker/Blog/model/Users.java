@@ -1,5 +1,6 @@
 package com.AceleraMaker.Blog.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 
 @Getter
 @Setter
@@ -29,4 +31,8 @@ public class Users {
 
     @Column(length = 5000)
     private String foto;
+
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties("usuario")
+    private ArrayList<Postagem> postagems;
 }
