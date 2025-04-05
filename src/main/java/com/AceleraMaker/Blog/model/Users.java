@@ -20,7 +20,7 @@ public class Users {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private BigInteger ID;
+    private Long ID;
 
     private String nome;
 

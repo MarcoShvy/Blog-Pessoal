@@ -20,7 +20,7 @@ public class Postagem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private BigInteger ID;
+    private Long ID;
 
     @Column(length = 100)
     private String titulo;

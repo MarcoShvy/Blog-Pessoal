@@ -20,7 +20,7 @@ public class Tema {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private BigInteger ID;
+    private Long ID;
 
     private String descricao;
 
