@@ -2,8 +2,10 @@ package com.AceleraMaker.Blog.controller;
 
 import com.AceleraMaker.Blog.dto.UserDTO;
 import com.AceleraMaker.Blog.dto.UsuarioLogin;
+import com.AceleraMaker.Blog.exception.user.UsuarioJaCadastradoException;
 import com.AceleraMaker.Blog.model.User;
 import com.AceleraMaker.Blog.service.UserService;
+import org.apache.tomcat.websocket.AuthenticationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,47 +26,31 @@ public class UserController {
 
     @PostMapping()
     public ResponseEntity<Object> cadastrarUsuario(@RequestBody User usuario) {
-        Optional<User> novoUsuario = userService.cadastrarUsuario(usuario);
-
-        if (novoUsuario.isPresent()) {
-            UserDTO dto = userService.toDTO(novoUsuario.get());
+        try {
+            User novoUsuario = userService.cadastrarUsuario(usuario).orElseThrow();
+            UserDTO dto = userService.toDTO(novoUsuario);
             return ResponseEntity.status(HttpStatus.CREATED).body(dto);
-        } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Usuário já existente");
+        } catch (UsuarioJaCadastradoException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
         }
     }
 
     @PostMapping("/login")
     public ResponseEntity<Object> login(@RequestBody UsuarioLogin userLogin) {
-        Optional<UsuarioLogin> userAuth = userService.autenticarUsuario(userLogin);
-
-        if (userAuth.isPresent()) {
-            return ResponseEntity.ok(userAuth.get());
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuário ou senha inválidos");
-        }
+        UsuarioLogin usuarioAutenticado = userService.autenticarUsuario(userLogin).orElseThrow();
+        return ResponseEntity.ok(usuarioAutenticado);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Object> atualizarUsuario(@PathVariable Long id, @RequestBody User usuarioAtualizado) {
-        Optional<User> usuario = userService.atualizarUsuario(id, usuarioAtualizado);
-
-        if (usuario.isPresent()) {
-            return ResponseEntity.ok(usuario.get());
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado");
-        }
+    @PutMapping("/atualizar")
+    public ResponseEntity<Object> atualizar(@RequestBody User user) {
+        User usuarioAtualizado = userService.atualizarUsuario(user.getId(), user).orElseThrow();
+        return ResponseEntity.status(HttpStatus.OK).body(usuarioAtualizado);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deletarUsuario(@PathVariable Long id) {
-        boolean deletado = userService.deletarUsuario(id);
-
-        if (deletado) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado");
-        }
+    public ResponseEntity<Void> deletarUsuario(@PathVariable Long id) {
+        userService.deletarUsuario(id);
+        return ResponseEntity.noContent().build();
     }
 
 }

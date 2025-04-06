@@ -1,14 +1,19 @@
 package com.AceleraMaker.Blog.service;
 
 import com.AceleraMaker.Blog.dto.UserDTO;
+import com.AceleraMaker.Blog.exception.user.AutenticacaoException;
+import com.AceleraMaker.Blog.exception.user.UsuarioJaCadastradoException;
+import com.AceleraMaker.Blog.exception.user.UsuarioNaoEncontradoException;
 import com.AceleraMaker.Blog.security.JwtService;
 import com.AceleraMaker.Blog.dto.UsuarioLogin;
 import com.AceleraMaker.Blog.model.User;
 import com.AceleraMaker.Blog.repository.UserRepository;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.apache.tomcat.websocket.AuthenticationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -34,8 +39,8 @@ public class UserService {
 
     // Cadastrar usuário
     public Optional<User> cadastrarUsuario(User usuario) {
-        if (userRepository.findByUsuario(usuario.getUsuario()).isPresent()) {
-            return Optional.empty();
+        if (userRepository.existsByUsuario(usuario.getUsuario())) {
+            throw new UsuarioJaCadastradoException("Usuário já existe.");
         }
 
         usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
@@ -46,54 +51,53 @@ public class UserService {
     public Optional<UsuarioLogin> autenticarUsuario(UsuarioLogin userLogin) {
         Optional<User> usuario = userRepository.findByUsuario(userLogin.usuario());
 
-        if (usuario.isPresent()) {
-            boolean senhaCorreta = passwordEncoder.matches(userLogin.senha(), usuario.get().getSenha());
-
-            if (senhaCorreta) {
-                String token = jwtService.generateToken(usuario.get());
-
-                UsuarioLogin autenticado = new UsuarioLogin(userLogin.usuario(), null, token);
-                return Optional.of(autenticado);
-            }
+        if (usuario.isEmpty() || !passwordEncoder.matches(userLogin.senha(), usuario.get().getSenha())) {
+            throw new AutenticacaoException("Usuário ou senha inválidos");
         }
 
-        return Optional.empty();
+        String token = jwtService.generateToken(usuario.get());
+        UsuarioLogin autenticado = new UsuarioLogin(userLogin.usuario(), null, token);
+        return Optional.of(autenticado);
     }
+
 
     // Atualizar usuário
 
-    public Optional<User> atualizarUsuario(Long id, User usuarioAtualizado) {
-        Optional<User> usuarioExistente = userRepository.findById(id);
+    public Optional<User> atualizarUsuario(Long id, @Valid User novoUsuario) {
 
-        if (usuarioExistente.isPresent()) {
-            User usuario = usuarioExistente.get();
+        User usuarioExistente = userRepository.findById(id)
+                .orElseThrow(() -> new UsuarioNaoEncontradoException("Usuário com ID " + id + " não encontrado."));
 
-            usuario.setNome(usuarioAtualizado.getNome());
-            usuario.setUsuario(usuarioAtualizado.getUsuario());
+        // Verifica se já existe outro usuário com o mesmo nome de usuário
+        Optional<User> usuarioComMesmoNome = userRepository.findByUsuario(novoUsuario.getUsuario());
 
-            if (usuarioAtualizado.getSenha() != null && !usuarioAtualizado.getSenha().isEmpty()) {
-                usuario.setSenha(passwordEncoder.encode(usuarioAtualizado.getSenha()));
-            }
-            usuario.setFoto(usuarioAtualizado.getFoto());
-
-            return Optional.of(userRepository.save(usuario));
+        if (usuarioComMesmoNome.isPresent() && !usuarioComMesmoNome.get().getId().equals(id)) {
+            throw new UsuarioJaCadastradoException("Nome de usuário já está em uso.");
         }
 
-        return Optional.empty();
+        usuarioExistente.setNome(novoUsuario.getNome());
+        usuarioExistente.setUsuario(novoUsuario.getUsuario());
+
+        if (novoUsuario.getSenha() != null && !novoUsuario.getSenha().isBlank()) {
+            usuarioExistente.setSenha(passwordEncoder.encode(novoUsuario.getSenha()));
+        }
+
+        usuarioExistente.setFoto(novoUsuario.getFoto());
+
+        return Optional.of(userRepository.save(usuarioExistente));
     }
 
 
     // Deletar usuário
 
-    public boolean deletarUsuario(Long id) {
-        Optional<User> usuarioExistente = userRepository.findById(id);
+    public void deletarUsuario(Long id) {
+        Optional<User> usuario = userRepository.findById(id);
 
-        if (usuarioExistente.isPresent()) {
-            userRepository.deleteById(id);
-            return true;
+        if (usuario.isEmpty()) {
+            throw new UsuarioNaoEncontradoException("Usuário com ID " + id + " não encontrado.");
         }
 
-        return false;
+        userRepository.deleteById(id);
     }
 
     public UserDTO toDTO(User user) {
