@@ -1,5 +1,6 @@
 package com.AceleraMaker.Blog.service;
 
+import com.AceleraMaker.Blog.dto.TemaDTO;
 import com.AceleraMaker.Blog.model.Tema;
 import com.AceleraMaker.Blog.repository.TemaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,17 +19,40 @@ public class TemaService {
         this.temaRepository = temaRepository;
     }
 
-    // Criar um novo tema
-    public Tema criarTema(Tema tema) {
-        return temaRepository.save(tema);
+    public TemaDTO toDTO(Tema tema) {
+        TemaDTO dto = new TemaDTO();
+        dto.setId(tema.getId());
+        dto.setDescricao(tema.getDescricao());
+        return dto;
     }
 
-    // Atualizar um tema existente
-    public Optional<Tema> atualizarTema(Long id, Tema temaAtualizado) {
+    public Tema toEntity(TemaDTO dto) {
+        Tema tema = new Tema();
+        tema.setId(dto.getId());
+        tema.setDescricao(dto.getDescricao());
+        return tema;
+    }
+
+
+    public TemaDTO criarTema(TemaDTO dto) {
+        Tema tema = toEntity(dto);
+        Tema novo = temaRepository.save(tema);
+        return toDTO(novo);
+    }
+
+    public Optional<TemaDTO> atualizarTema(Long id, TemaDTO dto) {
         return temaRepository.findById(id).map(tema -> {
-            tema.setDescricao(temaAtualizado.getDescricao());
-            return temaRepository.save(tema);
+            tema.setDescricao(dto.getDescricao());
+            Tema atualizado = temaRepository.save(tema);
+            return toDTO(atualizado);
         });
+    }
+
+    public List<TemaDTO> listarTodos() {
+        return temaRepository.findAll()
+                .stream()
+                .map(this::toDTO)
+                .toList();
     }
 
     // Excluir um tema
@@ -37,10 +61,5 @@ public class TemaService {
             temaRepository.delete(tema);
             return true;
         }).orElse(false);
-    }
-
-    // Listar todos os temas
-    public List<Tema> listarTodos() {
-        return temaRepository.findAll();
     }
 }

@@ -1,5 +1,6 @@
 package com.AceleraMaker.Blog.controller;
 
+import com.AceleraMaker.Blog.dto.TemaDTO;
 import com.AceleraMaker.Blog.model.Tema;
 import com.AceleraMaker.Blog.service.TemaService;
 import jakarta.validation.Valid;
@@ -23,25 +24,18 @@ public class TemaController {
         this.temaService = temaService;
     }
 
-    // Criar um novo tema
     @PostMapping
-    public ResponseEntity<Tema> criarTema(@Valid @RequestBody Tema tema) {
-        Tema novoTema = temaService.criarTema(tema);
-        return ResponseEntity.status(201).body(novoTema);
+    public ResponseEntity<TemaDTO> criarTema(@Valid @RequestBody TemaDTO temaDTO) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(temaService.criarTema(temaDTO));
     }
 
-    // Atualizar um tema existente
     @PutMapping("/{id}")
-    public ResponseEntity<Object> atualizarTema(@PathVariable Long id, @RequestBody Tema temaAtualizado) {
-        Optional<Tema> tema = temaService.atualizarTema(id, temaAtualizado);
-        if (tema.isPresent()) {
-            return ResponseEntity.ok(tema.get());
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tema não encontrado");
-        }
+    public ResponseEntity<Object> atualizarTema(@PathVariable Long id, @RequestBody TemaDTO temaAtualizado) {
+        Optional<TemaDTO> tema = temaService.atualizarTema(id, temaAtualizado);
+        return tema.<ResponseEntity<Object>>map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tema não encontrado"));
     }
 
-    //  Excluir um tema
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deletarTema(@PathVariable Long id) {
         boolean deletado = temaService.excluirTema(id);
@@ -52,9 +46,8 @@ public class TemaController {
         }
     }
 
-    // Listar todos os temas
     @GetMapping
-    public ResponseEntity<List<Tema>> listarTodos() {
+    public ResponseEntity<List<TemaDTO>> listarTodos() {
         return ResponseEntity.ok(temaService.listarTodos());
     }
 }
