@@ -8,10 +8,10 @@ import java.util.List;
 
 @Repository
 public interface PostagemRepository extends JpaRepository<Postagem, Long> {
-    List<Postagem> findByAutorId(Long autorId);
+
+    List<Postagem> findByUsuarioId(Long usuarioId);
 
     List<Postagem> findByTemaId(Long temaId);
 
-    List<Postagem> findByAutorIdAndTemaId(Long autorId, Long temaId);
+    List<Postagem> findByUsuarioIdAndTemaId(Long usuarioId, Long temaId);
 }
-

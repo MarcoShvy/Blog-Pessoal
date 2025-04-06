@@ -1,5 +1,6 @@
 package com.AceleraMaker.Blog.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -14,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 
-@Entity(name = "Users")
+@Entity(name = "users")
 public class User {
 
     @Id
@@ -33,5 +34,6 @@ public class User {
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
     @JsonIgnoreProperties("usuario")
+    @JsonIgnore
     private List<Postagem> postagems;
 }

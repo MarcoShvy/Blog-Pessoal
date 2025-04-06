@@ -1,5 +1,6 @@
 package com.AceleraMaker.Blog.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -27,5 +28,6 @@ public class Tema {
 
     @OneToMany(mappedBy = "tema", cascade = CascadeType.ALL)
     @JsonIgnoreProperties("tema")
+    @JsonIgnore
     private List<Postagem> postagems;
 }

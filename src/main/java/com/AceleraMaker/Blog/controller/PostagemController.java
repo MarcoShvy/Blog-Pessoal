@@ -28,7 +28,7 @@ public class PostagemController {
             @RequestParam(required = false) Long autor,
             @RequestParam(required = false) Long tema) {
 
-        List<Postagem> resultado = postagemService.filtrarPorAutorETema(autor, tema);
+        List<Postagem> resultado = postagemService.filtrarPorUsuarioETema(autor, tema);
         return ResponseEntity.ok(resultado);
     }
 

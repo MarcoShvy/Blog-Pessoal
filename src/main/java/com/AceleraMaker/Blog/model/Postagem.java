@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -27,6 +28,7 @@ public class Postagem {
     @Column(length = 500)
     private String texto;
 
+    @CreationTimestamp
     private LocalDateTime data;
 
     @ManyToOne
@@ -35,7 +37,7 @@ public class Postagem {
     private Tema tema;
 
     @ManyToOne
-    @JoinColumn(name = "usuario_id")
+    @JoinColumn(name = "usuario_id", nullable = false)
     @JsonIgnoreProperties("postagem")
     private User usuario;
 }
