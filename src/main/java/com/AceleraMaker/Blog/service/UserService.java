@@ -2,7 +2,7 @@ package com.AceleraMaker.Blog.service;
 
 import com.AceleraMaker.Blog.security.JwtService;
 import com.AceleraMaker.Blog.dto.UsuarioLogin;
-import com.AceleraMaker.Blog.model.Users;
+import com.AceleraMaker.Blog.model.User;
 import com.AceleraMaker.Blog.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -32,7 +32,7 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
 
     // Cadastrar usuário
-    public Optional<Users> cadastrarUsuario(Users usuario) {
+    public Optional<User> cadastrarUsuario(User usuario) {
         if (userRepository.findByUsuario(usuario.getUsuario()).isPresent()) {
             return Optional.empty();
         }
@@ -43,7 +43,7 @@ public class UserService {
 
     // Autenticar usuário
     public Optional<UsuarioLogin> autenticarUsuario(UsuarioLogin userLogin) {
-        Optional<Users> usuario = userRepository.findByUsuario(userLogin.usuario());
+        Optional<User> usuario = userRepository.findByUsuario(userLogin.usuario());
 
         if (usuario.isPresent()) {
             boolean senhaCorreta = passwordEncoder.matches(userLogin.senha(), usuario.get().getSenha());
@@ -61,11 +61,11 @@ public class UserService {
 
     // Atualizar usuário
 
-    public Optional<Users> atualizarUsuario(Long id, Users usuarioAtualizado) {
-        Optional<Users> usuarioExistente = userRepository.findById(id);
+    public Optional<User> atualizarUsuario(Long id, User usuarioAtualizado) {
+        Optional<User> usuarioExistente = userRepository.findById(id);
 
         if (usuarioExistente.isPresent()) {
-            Users usuario = usuarioExistente.get();
+            User usuario = usuarioExistente.get();
 
             usuario.setNome(usuarioAtualizado.getNome());
             usuario.setUsuario(usuarioAtualizado.getUsuario());
@@ -84,7 +84,7 @@ public class UserService {
     // Deletar usuário
 
     public boolean deletarUsuario(Long id) {
-        Optional<Users> usuarioExistente = userRepository.findById(id);
+        Optional<User> usuarioExistente = userRepository.findById(id);
 
         if (usuarioExistente.isPresent()) {
             userRepository.deleteById(id);

@@ -1,5 +1,5 @@
 package com.AceleraMaker.Blog.security;
-import com.AceleraMaker.Blog.model.Users;
+import com.AceleraMaker.Blog.model.User;
 import io.jsonwebtoken.*;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +11,7 @@ public class JwtService {
     private static final String SECRET_KEY = "acelerarMakerChave";
     private static final long EXPIRATION_TIME = 86400000; // 1 dia
 
-    public String generateToken(Users usuario) {
+    public String generateToken(User usuario) {
         return Jwts.builder()
                 .setSubject(usuario.getUsuario())
                 .setIssuedAt(new Date())

@@ -1,14 +1,14 @@
 package com.AceleraMaker.Blog.repository;
 
-import com.AceleraMaker.Blog.model.Users;
+import com.AceleraMaker.Blog.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @Repository
-public interface UserRepository extends JpaRepository<Users, Long> {
+public interface UserRepository extends JpaRepository<User, Long> {
 
-    Optional<Users> findByUsuario(String usuario);
+    Optional<User> findByUsuario(String usuario);
 }
 

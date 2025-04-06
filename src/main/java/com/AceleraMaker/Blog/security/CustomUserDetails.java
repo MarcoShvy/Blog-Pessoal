@@ -1,6 +1,6 @@
 package com.AceleraMaker.Blog.security;
 
-import com.AceleraMaker.Blog.model.Users;
+import com.AceleraMaker.Blog.model.User;
 import com.AceleraMaker.Blog.repository.UserRepository;
 import org.springframework.security.core.userdetails.*;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,7 @@ public class CustomUserDetails implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Users user = userRepository.findByUsuario(username)
+        User user = userRepository.findByUsuario(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado: " + username));
 
         return new org.springframework.security.core.userdetails.User(

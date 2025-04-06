@@ -2,6 +2,7 @@ package com.AceleraMaker.Blog.controller;
 
 import com.AceleraMaker.Blog.model.Tema;
 import com.AceleraMaker.Blog.service.TemaService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,7 @@ public class TemaController {
 
     // Criar um novo tema
     @PostMapping
-    public ResponseEntity<Tema> criarTema(@RequestBody Tema tema) {
+    public ResponseEntity<Tema> criarTema(@Valid @RequestBody Tema tema) {
         Tema novoTema = temaService.criarTema(tema);
         return ResponseEntity.status(201).body(novoTema);
     }

@@ -1,7 +1,7 @@
 package com.AceleraMaker.Blog.controller;
 
 import com.AceleraMaker.Blog.dto.UsuarioLogin;
-import com.AceleraMaker.Blog.model.Users;
+import com.AceleraMaker.Blog.model.User;
 import com.AceleraMaker.Blog.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,8 +22,8 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Object> cadastrarUsuario(@RequestBody Users usuario) {
-        Optional<Users> novoUsuario = userService.cadastrarUsuario(usuario);
+    public ResponseEntity<Object> cadastrarUsuario(@RequestBody User usuario) {
+        Optional<User> novoUsuario = userService.cadastrarUsuario(usuario);
 
         if (novoUsuario.isPresent()) {
             return ResponseEntity.status(HttpStatus.CREATED).body(novoUsuario.get());
@@ -44,8 +44,8 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> atualizarUsuario(@PathVariable Long id, @RequestBody Users usuarioAtualizado) {
-        Optional<Users> usuario = userService.atualizarUsuario(id, usuarioAtualizado);
+    public ResponseEntity<Object> atualizarUsuario(@PathVariable Long id, @RequestBody User usuarioAtualizado) {
+        Optional<User> usuario = userService.atualizarUsuario(id, usuarioAtualizado);
 
         if (usuario.isPresent()) {
             return ResponseEntity.ok(usuario.get());

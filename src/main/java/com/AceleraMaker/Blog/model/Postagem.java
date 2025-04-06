@@ -37,5 +37,5 @@ public class Postagem {
     @ManyToOne
     @JoinColumn(name = "usuario_id")
     @JsonIgnoreProperties("postagem")
-    private Users usuario;
+    private User usuario;
 }
