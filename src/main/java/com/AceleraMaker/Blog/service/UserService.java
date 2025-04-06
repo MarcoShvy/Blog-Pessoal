@@ -1,5 +1,6 @@
 package com.AceleraMaker.Blog.service;
 
+import com.AceleraMaker.Blog.dto.UserDTO;
 import com.AceleraMaker.Blog.security.JwtService;
 import com.AceleraMaker.Blog.dto.UsuarioLogin;
 import com.AceleraMaker.Blog.model.User;
@@ -73,6 +74,7 @@ public class UserService {
             if (usuarioAtualizado.getSenha() != null && !usuarioAtualizado.getSenha().isEmpty()) {
                 usuario.setSenha(passwordEncoder.encode(usuarioAtualizado.getSenha()));
             }
+            usuario.setFoto(usuarioAtualizado.getFoto());
 
             return Optional.of(userRepository.save(usuario));
         }
@@ -92,5 +94,9 @@ public class UserService {
         }
 
         return false;
+    }
+
+    public UserDTO toDTO(User user) {
+        return new UserDTO(user.getId(), user.getNome(), user.getUsuario(), user.getFoto());
     }
 }

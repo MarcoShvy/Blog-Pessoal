@@ -1,5 +1,6 @@
 package com.AceleraMaker.Blog.controller;
 
+import com.AceleraMaker.Blog.dto.UserDTO;
 import com.AceleraMaker.Blog.dto.UsuarioLogin;
 import com.AceleraMaker.Blog.model.User;
 import com.AceleraMaker.Blog.service.UserService;
@@ -21,12 +22,13 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping("/register")
+    @PostMapping()
     public ResponseEntity<Object> cadastrarUsuario(@RequestBody User usuario) {
         Optional<User> novoUsuario = userService.cadastrarUsuario(usuario);
 
         if (novoUsuario.isPresent()) {
-            return ResponseEntity.status(HttpStatus.CREATED).body(novoUsuario.get());
+            UserDTO dto = userService.toDTO(novoUsuario.get());
+            return ResponseEntity.status(HttpStatus.CREATED).body(dto);
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Usuário já existente");
         }
