@@ -37,23 +37,19 @@ public class PostagemController {
 
     @PostMapping
     public ResponseEntity<PostagemResponseDTO> criar(@Valid @RequestBody PostagemDTO dto) {
-        return postagemService.criar(dto)
-                .map(postagem -> ResponseEntity.ok(postagemService.toResponseDTO(postagem)))
-                .orElse(ResponseEntity.badRequest().build());
+        Postagem postagem = postagemService.criar(dto);
+        return ResponseEntity.ok(postagemService.toResponseDTO(postagem));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<PostagemResponseDTO> atualizar(@PathVariable Long id, @Valid @RequestBody PostagemDTO dto) {
-        return postagemService.atualizar(id, dto)
-                .map(postagem -> ResponseEntity.ok(postagemService.toResponseDTO(postagem)))
-                .orElse(ResponseEntity.notFound().build());
+        Postagem postagemAtualizada = postagemService.atualizar(id, dto);
+        return ResponseEntity.ok(postagemService.toResponseDTO(postagemAtualizada));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable Long id) {
-        if (postagemService.deletar(id)) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.notFound().build();
+        postagemService.deletar(id);
+        return ResponseEntity.noContent().build();
     }
 }

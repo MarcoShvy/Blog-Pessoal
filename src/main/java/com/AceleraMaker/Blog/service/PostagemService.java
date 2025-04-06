@@ -2,6 +2,9 @@ package com.AceleraMaker.Blog.service;
 
 import com.AceleraMaker.Blog.dto.PostagemDTO;
 import com.AceleraMaker.Blog.dto.PostagemResponseDTO;
+import com.AceleraMaker.Blog.exception.postagem.PostagemNaoEncontradaException;
+import com.AceleraMaker.Blog.exception.tema.TemaNaoEncontradoException;
+import com.AceleraMaker.Blog.exception.user.UsuarioNaoEncontradoException;
 import com.AceleraMaker.Blog.model.Postagem;
 import com.AceleraMaker.Blog.model.Tema;
 import com.AceleraMaker.Blog.model.User;
@@ -32,55 +35,69 @@ public class PostagemService {
     }
 
     public List<Postagem> filtrarPorUsuarioETema(Long autor, Long tema) {
+        List<Postagem> postagens;
+
         if (autor != null && tema != null) {
-            return postagemRepository.findByUsuarioIdAndTemaId(autor, tema);
+            postagens = postagemRepository.findByUsuarioIdAndTemaId(autor, tema);
         } else if (autor != null) {
-            return postagemRepository.findByUsuarioId(autor);
+            postagens = postagemRepository.findByUsuarioId(autor);
         } else if (tema != null) {
-            return postagemRepository.findByTemaId(tema);
+            postagens = postagemRepository.findByTemaId(tema);
         } else {
-            return listarTodas();
+            postagens = listarTodas();
         }
+
+        if (postagens.isEmpty()) {
+            throw new PostagemNaoEncontradaException("Nenhuma postagem encontrada com os filtros aplicados");
+        }
+
+        return postagens;
     }
 
 
-    public Optional<Postagem> criar(PostagemDTO dto) {
-        Postagem postagem = new Postagem();
-        postagem.setTitulo(dto.getTitulo());
-        postagem.setTexto(dto.getTexto());
-
-        // Busca o usuário no banco
+    public Postagem criar(PostagemDTO dto) {
         User usuario = userRepository.findById(dto.getUsuarioId())
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
-        postagem.setUsuario(usuario);
+                .orElseThrow(() -> new UsuarioNaoEncontradoException("Usuário não encontrado"));
 
-        // Busca o tema no banco
         Tema tema = temaRepository.findById(dto.getTemaId())
-                .orElseThrow(() -> new RuntimeException("Tema não encontrado"));
-        postagem.setTema(tema);
+                .orElseThrow(() -> new TemaNaoEncontradoException("Tema não encontrado"));
 
-        return Optional.of(postagemRepository.save(postagem));
+        Postagem novaPostagem = new Postagem();
+        novaPostagem.setTitulo(dto.getTitulo());
+        novaPostagem.setTexto(dto.getTexto());
+        novaPostagem.setUsuario(usuario);
+        novaPostagem.setTema(tema);
+
+        return postagemRepository.save(novaPostagem);
     }
 
-    public Optional<Postagem> atualizar(Long id, PostagemDTO dto) {
-        Optional<Postagem> existente = postagemRepository.findById(id);
-        if (existente.isPresent()) {
-            Postagem postagem = existente.get();
-            postagem.setTitulo(dto.getTitulo());
-            postagem.setTexto(dto.getTexto());
-            return Optional.of(postagemRepository.save(postagem));
-        } else {
-            return Optional.empty();
-        }
+    public Postagem atualizar(Long id, PostagemDTO dto) {
+        Postagem postagemExistente = postagemRepository.findById(id)
+                .orElseThrow(() -> new PostagemNaoEncontradaException("Postagem não encontrada"));
+
+        User usuario = userRepository.findById(dto.getUsuarioId())
+                .orElseThrow(() -> new UsuarioNaoEncontradoException("Usuário não encontrado"));
+
+        Tema tema = temaRepository.findById(dto.getTemaId())
+                .orElseThrow(() -> new TemaNaoEncontradoException("Tema não encontrado"));
+
+        postagemExistente.setTitulo(dto.getTitulo());
+        postagemExistente.setTexto(dto.getTexto());
+        postagemExistente.setUsuario(usuario);
+        postagemExistente.setTema(tema);
+
+        return postagemRepository.save(postagemExistente);
     }
 
     public boolean deletar(Long id) {
-        if (postagemRepository.existsById(id)) {
-            postagemRepository.deleteById(id);
-            return true;
+        if (!postagemRepository.existsById(id)) {
+            throw new PostagemNaoEncontradaException("Postagem com ID " + id + " não encontrada");
         }
-        return false;
+
+        postagemRepository.deleteById(id);
+        return true;
     }
+
 
     public PostagemResponseDTO toResponseDTO(Postagem postagem) {
         return new PostagemResponseDTO(

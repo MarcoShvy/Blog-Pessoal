@@ -1,5 +1,7 @@
 package com.AceleraMaker.Blog.exception;
 
+import com.AceleraMaker.Blog.exception.postagem.PostagemNaoEncontradaException;
+import com.AceleraMaker.Blog.exception.tema.TemaNaoEncontradoException;
 import com.AceleraMaker.Blog.exception.user.AutenticacaoException;
 import com.AceleraMaker.Blog.exception.user.UsuarioJaCadastradoException;
 import com.AceleraMaker.Blog.exception.user.UsuarioNaoEncontradoException;
@@ -9,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.LocalDateTime;
@@ -85,5 +88,16 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
     }
 
+    @ExceptionHandler(TemaNaoEncontradoException.class)
+    public ResponseEntity<StandardError> handleTemaNaoEncontrado(TemaNaoEncontradoException ex) {
+        StandardError error = new StandardError(LocalDateTime.now(), HttpStatus.NOT_FOUND.value(), "Tema não encontrado", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    @ExceptionHandler(PostagemNaoEncontradaException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<String> handlePostagemNotFound(PostagemNaoEncontradaException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
 }
 

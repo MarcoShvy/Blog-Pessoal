@@ -1,6 +1,7 @@
 package com.AceleraMaker.Blog.service;
 
 import com.AceleraMaker.Blog.dto.TemaDTO;
+import com.AceleraMaker.Blog.exception.tema.TemaNaoEncontradoException;
 import com.AceleraMaker.Blog.model.Tema;
 import com.AceleraMaker.Blog.repository.TemaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,12 +41,13 @@ public class TemaService {
         return toDTO(novo);
     }
 
-    public Optional<TemaDTO> atualizarTema(Long id, TemaDTO dto) {
-        return temaRepository.findById(id).map(tema -> {
-            tema.setDescricao(dto.getDescricao());
-            Tema atualizado = temaRepository.save(tema);
-            return toDTO(atualizado);
-        });
+    public TemaDTO atualizarTema(Long id, TemaDTO dto) {
+        Tema tema = temaRepository.findById(id)
+                .orElseThrow(() -> new TemaNaoEncontradoException("Tema com ID " + id + " não encontrado"));
+
+        tema.setDescricao(dto.getDescricao());
+        Tema atualizado = temaRepository.save(tema);
+        return toDTO(atualizado);
     }
 
     public List<TemaDTO> listarTodos() {
@@ -56,10 +58,10 @@ public class TemaService {
     }
 
     // Excluir um tema
-    public boolean excluirTema(Long id) {
-        return temaRepository.findById(id).map(tema -> {
-            temaRepository.delete(tema);
-            return true;
-        }).orElse(false);
+    public void excluirTema(Long id) {
+        Tema tema = temaRepository.findById(id)
+                .orElseThrow(() -> new TemaNaoEncontradoException("Tema com ID " + id + " não encontrado"));
+
+        temaRepository.delete(tema);
     }
 }
