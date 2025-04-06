@@ -9,12 +9,9 @@ import com.AceleraMaker.Blog.dto.UsuarioLogin;
 import com.AceleraMaker.Blog.model.User;
 import com.AceleraMaker.Blog.repository.UserRepository;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.apache.tomcat.websocket.AuthenticationException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -23,19 +20,21 @@ import java.util.Optional;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
+
 
 @Service
 public class UserService {
 
-    @Autowired
+
     private UserRepository userRepository;
-
-    @Autowired
     private JwtService jwtService;
-
-    @Autowired
     private PasswordEncoder passwordEncoder;
+
+    public UserService(UserRepository userRepository, JwtService jwtService, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.jwtService = jwtService;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     // Cadastrar usuário
     public Optional<User> cadastrarUsuario(User usuario) {

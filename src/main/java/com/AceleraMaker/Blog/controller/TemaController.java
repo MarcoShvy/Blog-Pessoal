@@ -1,7 +1,6 @@
 package com.AceleraMaker.Blog.controller;
 
 import com.AceleraMaker.Blog.dto.TemaDTO;
-import com.AceleraMaker.Blog.model.Tema;
 import com.AceleraMaker.Blog.service.TemaService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
