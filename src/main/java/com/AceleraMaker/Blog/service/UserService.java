@@ -102,6 +102,6 @@ public class UserService {
     }
 
     public UserDTO toDTO(User user) {
-        return new UserDTO(user.getId(), user.getNome(), user.getUsuario(), user.getFoto(), user.getSenha());
+        return new UserDTO(user.getId(), user.getNome(), user.getUsuario(), user.getFoto(), user.getSenha(), user.getTipoUsuario());
     }
 }

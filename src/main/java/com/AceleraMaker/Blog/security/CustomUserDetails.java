@@ -2,10 +2,12 @@ package com.AceleraMaker.Blog.security;
 
 import com.AceleraMaker.Blog.model.User;
 import com.AceleraMaker.Blog.repository.UserRepository;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.*;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.List;
 
 @Service
 public class CustomUserDetails implements UserDetailsService {
@@ -19,12 +21,15 @@ public class CustomUserDetails implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsuario(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado: " + username));
+                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
+
+        List<SimpleGrantedAuthority> authorities =
+                Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + user.getTipoUsuario().name()));
 
         return new org.springframework.security.core.userdetails.User(
                 user.getUsuario(),
                 user.getSenha(),
-                Collections.emptyList()
+                authorities
         );
     }
 }

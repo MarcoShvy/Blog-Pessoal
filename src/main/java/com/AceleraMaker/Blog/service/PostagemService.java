@@ -8,9 +8,12 @@ import com.AceleraMaker.Blog.exception.user.UsuarioNaoEncontradoException;
 import com.AceleraMaker.Blog.model.Postagem;
 import com.AceleraMaker.Blog.model.Tema;
 import com.AceleraMaker.Blog.model.User;
+import com.AceleraMaker.Blog.model.enums.TipoUsuario;
 import com.AceleraMaker.Blog.repository.PostagemRepository;
 import com.AceleraMaker.Blog.repository.TemaRepository;
 import com.AceleraMaker.Blog.repository.UserRepository;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -75,23 +78,32 @@ public class PostagemService {
         Postagem postagemExistente = postagemRepository.findById(id)
                 .orElseThrow(() -> new PostagemNaoEncontradaException("Postagem não encontrada"));
 
-        User usuario = userRepository.findById(dto.getUsuarioId())
-                .orElseThrow(() -> new UsuarioNaoEncontradoException("Usuário não encontrado"));
+        User usuarioAutenticado = getUsuarioAutenticado();
 
-        Tema tema = temaRepository.findById(dto.getTemaId())
-                .orElseThrow(() -> new TemaNaoEncontradoException("Tema não encontrado"));
+        boolean isAdmin = usuarioAutenticado.getTipoUsuario().equals(TipoUsuario.ADMIN);
+        boolean isOwner = postagemExistente.getUsuario().getId().equals(usuarioAutenticado.getId());
+
+        if (!isAdmin && !isOwner) {
+            throw new SecurityException("Você não tem permissão para editar esta postagem");
+        }
 
         postagemExistente.setTitulo(dto.getTitulo());
         postagemExistente.setTexto(dto.getTexto());
-        postagemExistente.setUsuario(usuario);
-        postagemExistente.setTema(tema);
 
         return postagemRepository.save(postagemExistente);
     }
 
     public boolean deletar(Long id) {
-        if (!postagemRepository.existsById(id)) {
-            throw new PostagemNaoEncontradaException("Postagem com ID " + id + " não encontrada");
+        Postagem postagem = postagemRepository.findById(id)
+                .orElseThrow(() -> new PostagemNaoEncontradaException("Postagem com ID " + id + " não encontrada"));
+
+        User usuarioAutenticado = getUsuarioAutenticado();
+
+        boolean isAdmin = usuarioAutenticado.getTipoUsuario().equals(TipoUsuario.ADMIN);
+        boolean isOwner = postagem.getUsuario().getId().equals(usuarioAutenticado.getId());
+
+        if (!isAdmin && !isOwner) {
+            throw new SecurityException("Você não tem permissão para excluir esta postagem");
         }
 
         postagemRepository.deleteById(id);
@@ -113,6 +125,13 @@ public class PostagemService {
     public List<PostagemResponseDTO> toResponseDTOList(List<Postagem> postagens) {
         return postagens.stream()
                 .map(this::toResponseDTO).collect(Collectors.toList());
+    }
+
+    private User getUsuarioAutenticado() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        return userRepository.findByUsuario(username)
+                .orElseThrow(() -> new UsuarioNaoEncontradoException("Usuário autenticado não encontrado"));
     }
 
 }

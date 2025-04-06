@@ -2,6 +2,7 @@ package com.AceleraMaker.Blog.security;
 
 
 import org.springframework.context.annotation.*;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.*;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -20,6 +21,7 @@ public class SecurityConfig {
         this.jwtFilter = jwtFilter;
     }
 
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
@@ -32,7 +34,21 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/usuarios/login", "/api/usuarios/register", "/h2-console/**", "/api/postagens/**", "api/temas/**", "/api/**").permitAll()
+                        // Endpoints públicos
+                        .requestMatchers(
+                                "/api/usuarios/login",
+                                "/api/usuarios"
+                        ).permitAll()
+
+                        // Leitura pública
+                        .requestMatchers(HttpMethod.GET, "/api/postagens/**", "/api/temas/**").permitAll()
+
+                        // Criação, edição e deleção: permitido para USER e ADMIN
+                        .requestMatchers(HttpMethod.POST, "/api/postagens/**", "/api/temas/**").hasAnyRole("COMUM", "ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/postagens/**", "/api/temas/**").hasAnyRole("COMUM", "ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/postagens/**", "/api/temas/**").hasAnyRole("COMUM", "ADMIN")
+
+                        // Outros endpoints exigem autenticação
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)

@@ -99,5 +99,10 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handlePostagemNotFound(PostagemNaoEncontradaException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
+
+    @ExceptionHandler(SecurityException.class)
+    public ResponseEntity<String> handleSecurityException(SecurityException ex) {
+        return ResponseEntity.status(403).body(ex.getMessage());
+    }
 }
 

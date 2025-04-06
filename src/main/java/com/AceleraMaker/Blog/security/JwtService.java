@@ -3,17 +3,26 @@ import com.AceleraMaker.Blog.model.User;
 import io.jsonwebtoken.*;
 import org.springframework.stereotype.Service;
 
+import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.StandardCharsets;
+import java.security.Key;
 import java.util.Date;
 
 @Service
 public class JwtService {
 
-    private static final String SECRET_KEY = "acelerarMakerChave";
+    private static final Key SECRET_KEY = new SecretKeySpec(
+            "acelera-maker-key-blog".getBytes(StandardCharsets.UTF_8),
+            0,
+            "acelera-maker-key-blog".getBytes(StandardCharsets.UTF_8).length,
+            "HmacSHA256"
+    );
     private static final long EXPIRATION_TIME = 86400000; // 1 dia
 
     public String generateToken(User usuario) {
         return Jwts.builder()
                 .setSubject(usuario.getUsuario())
+                .claim("role", usuario.getTipoUsuario().name())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .signWith(SignatureAlgorithm.HS512, SECRET_KEY)

@@ -7,11 +7,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
-@RequestMapping("/api/temas")
+@RequestMapping("/api/temas/")
 public class TemaController {
 
     private final TemaService temaService;
@@ -25,16 +27,20 @@ public class TemaController {
         return ResponseEntity.status(HttpStatus.CREATED).body(temaService.criarTema(temaDTO));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("{id}")
     public ResponseEntity<TemaDTO> atualizarTema(@Valid @PathVariable Long id, @RequestBody TemaDTO temaAtualizado) {
         TemaDTO tema = temaService.atualizarTema(id, temaAtualizado);
         return ResponseEntity.ok(tema);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletarTema(@PathVariable Long id) {
+    @DeleteMapping("{id}")
+    public ResponseEntity<Map<String, String>> deletarTema(@PathVariable Long id) {
         temaService.excluirTema(id);
-        return ResponseEntity.noContent().build();
+
+        Map<String, String> resposta = new HashMap<>();
+        resposta.put("mensagem", "Tema deletado com sucesso");
+
+        return ResponseEntity.ok(resposta);
     }
 
     @GetMapping

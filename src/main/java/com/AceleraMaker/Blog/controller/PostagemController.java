@@ -9,10 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
-@RequestMapping("/api/postagens")
+@RequestMapping("/api/postagens/")
 public class PostagemController {
 
     @Autowired
@@ -23,7 +25,7 @@ public class PostagemController {
         return ResponseEntity.ok(postagemService.listarTodas());
     }
 
-    @GetMapping("/filtro")
+    @GetMapping("filtro")
     public ResponseEntity<List<PostagemResponseDTO>> filtrar(
             @RequestParam(required = false) Long autor,
             @RequestParam(required = false) Long tema) {
@@ -40,15 +42,19 @@ public class PostagemController {
         return ResponseEntity.ok(postagemService.toResponseDTO(postagem));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("{id}")
     public ResponseEntity<PostagemResponseDTO> atualizar(@PathVariable Long id, @Valid @RequestBody PostagemDTO dto) {
         Postagem postagemAtualizada = postagemService.atualizar(id, dto);
         return ResponseEntity.ok(postagemService.toResponseDTO(postagemAtualizada));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+    @DeleteMapping("{id}")
+    public ResponseEntity<Map<String, String>> deletar(@PathVariable Long id) {
         postagemService.deletar(id);
-        return ResponseEntity.noContent().build();
+
+        Map<String, String> resposta = new HashMap<>();
+        resposta.put("mensagem", "Postagem deletada com sucesso");
+
+        return ResponseEntity.ok(resposta);
     }
 }
