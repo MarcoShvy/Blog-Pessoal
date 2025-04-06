@@ -1,6 +1,7 @@
 package com.AceleraMaker.Blog.controller;
 
 import com.AceleraMaker.Blog.dto.PostagemDTO;
+import com.AceleraMaker.Blog.dto.PostagemResponseDTO;
 import com.AceleraMaker.Blog.model.Postagem;
 import com.AceleraMaker.Blog.service.PostagemService;
 import jakarta.validation.Valid;
@@ -24,23 +25,27 @@ public class PostagemController {
     }
 
     @GetMapping("/filtro")
-    public ResponseEntity<List<Postagem>> filtrar(
+    public ResponseEntity<List<PostagemResponseDTO>> filtrar(
             @RequestParam(required = false) Long autor,
             @RequestParam(required = false) Long tema) {
 
         List<Postagem> resultado = postagemService.filtrarPorUsuarioETema(autor, tema);
-        return ResponseEntity.ok(resultado);
+        List<PostagemResponseDTO> resposta = postagemService.toResponseDTOList(resultado);
+
+        return ResponseEntity.ok(resposta);
     }
 
     @PostMapping
-    public ResponseEntity<Postagem> criar(@Valid @RequestBody PostagemDTO dto) {
-        return ResponseEntity.ok(postagemService.criar(dto).get());
+    public ResponseEntity<PostagemResponseDTO> criar(@Valid @RequestBody PostagemDTO dto) {
+        return postagemService.criar(dto)
+                .map(postagem -> ResponseEntity.ok(postagemService.toResponseDTO(postagem)))
+                .orElse(ResponseEntity.badRequest().build());
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> atualizar(@PathVariable Long id, @Valid @RequestBody PostagemDTO dto) {
+    public ResponseEntity<PostagemResponseDTO> atualizar(@PathVariable Long id, @Valid @RequestBody PostagemDTO dto) {
         return postagemService.atualizar(id, dto)
-                .map(postagem -> ResponseEntity.ok(postagem))
+                .map(postagem -> ResponseEntity.ok(postagemService.toResponseDTO(postagem)))
                 .orElse(ResponseEntity.notFound().build());
     }
 

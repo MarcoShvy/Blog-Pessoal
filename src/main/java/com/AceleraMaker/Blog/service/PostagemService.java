@@ -1,6 +1,7 @@
 package com.AceleraMaker.Blog.service;
 
 import com.AceleraMaker.Blog.dto.PostagemDTO;
+import com.AceleraMaker.Blog.dto.PostagemResponseDTO;
 import com.AceleraMaker.Blog.model.Postagem;
 import com.AceleraMaker.Blog.model.Tema;
 import com.AceleraMaker.Blog.model.User;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class PostagemService {
@@ -29,15 +31,15 @@ public class PostagemService {
         return postagemRepository.findAll();
     }
 
-    public List<Postagem> filtrarPorUsuarioETema(Long usuarioId, Long temaId) {
-        if (usuarioId != null && temaId != null) {
-            return postagemRepository.findByUsuarioIdAndTemaId(usuarioId, temaId);
-        } else if (usuarioId != null) {
-            return postagemRepository.findByUsuarioId(usuarioId);
-        } else if (temaId != null) {
-            return postagemRepository.findByTemaId(temaId);
+    public List<Postagem> filtrarPorUsuarioETema(Long autor, Long tema) {
+        if (autor != null && tema != null) {
+            return postagemRepository.findByUsuarioIdAndTemaId(autor, tema);
+        } else if (autor != null) {
+            return postagemRepository.findByUsuarioId(autor);
+        } else if (tema != null) {
+            return postagemRepository.findByTemaId(tema);
         } else {
-            return postagemRepository.findAll();
+            return listarTodas();
         }
     }
 
@@ -78,6 +80,23 @@ public class PostagemService {
             return true;
         }
         return false;
+    }
+
+    public PostagemResponseDTO toResponseDTO(Postagem postagem) {
+        return new PostagemResponseDTO(
+                postagem.getId(),
+                postagem.getTitulo(),
+                postagem.getTexto(),
+                postagem.getData(),
+                postagem.getUsuario() != null ? postagem.getUsuario().getNome() : null,
+                postagem.getTema() != null ? postagem.getTema().getDescricao() : null
+        );
+    }
+
+    public List<PostagemResponseDTO> toResponseDTOList(List<Postagem> postagens) {
+        return postagens.stream()
+                .map(this::toResponseDTO)
+                .collect(Collectors.toList());
     }
 
 }
