@@ -12,7 +12,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/temas")
-@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class TemaController {
 
     private final TemaService temaService;
