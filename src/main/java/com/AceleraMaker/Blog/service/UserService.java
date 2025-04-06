@@ -12,6 +12,7 @@ import jakarta.validation.Valid;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +31,7 @@ public class UserService {
     private JwtService jwtService;
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
     public UserService(UserRepository userRepository, JwtService jwtService, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.jwtService = jwtService;
@@ -62,12 +64,12 @@ public class UserService {
 
     // Atualizar usuário
 
-    public Optional<User> atualizarUsuario(Long id, @Valid User novoUsuario) {
+    public Optional<User> atualizarUsuario(Long id, @Valid UserDTO novoUsuario) {
 
         User usuarioExistente = userRepository.findById(id)
                 .orElseThrow(() -> new UsuarioNaoEncontradoException("Usuário com ID " + id + " não encontrado."));
 
-        // Verifica se já existe outro usuário com o mesmo nome de usuário
+
         Optional<User> usuarioComMesmoNome = userRepository.findByUsuario(novoUsuario.getUsuario());
 
         if (usuarioComMesmoNome.isPresent() && !usuarioComMesmoNome.get().getId().equals(id)) {
@@ -100,6 +102,6 @@ public class UserService {
     }
 
     public UserDTO toDTO(User user) {
-        return new UserDTO(user.getId(), user.getNome(), user.getUsuario(), user.getFoto());
+        return new UserDTO(user.getId(), user.getNome(), user.getUsuario(), user.getFoto(), user.getSenha());
     }
 }
