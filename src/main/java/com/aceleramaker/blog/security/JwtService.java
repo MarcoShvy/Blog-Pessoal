@@ -18,7 +18,7 @@ public class JwtService {
             0,
             "acelera-maker-key-blog".getBytes(StandardCharsets.UTF_8).length,
             "HmacSHA256"
-    );
+    ); //NOSONAR
     // NOSONAR-END
     private static final long EXPIRATION_TIME = 86400000; // 1 dia
 
