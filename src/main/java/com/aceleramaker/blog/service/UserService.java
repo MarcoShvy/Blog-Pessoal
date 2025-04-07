@@ -101,7 +101,20 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
+
+    public User fromDTO(UserDTO dto) {
+        return User.builder()
+                .nome(dto.getNome())
+                .usuario(dto.getUsuario())
+                .senha(dto.getSenha())
+                .build();
+    }
+
     public UserDTO toDTO(User user) {
-        return new UserDTO(user.getId(), user.getNome(), user.getUsuario(), user.getFoto(), user.getSenha(), user.getTipoUsuario());
+        return UserDTO.builder()
+                .id(user.getId())
+                .nome(user.getNome())
+                .usuario(user.getUsuario())
+                .build();
     }
 }

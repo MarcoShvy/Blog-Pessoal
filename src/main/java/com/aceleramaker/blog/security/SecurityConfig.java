@@ -42,8 +42,10 @@ public class SecurityConfig {
                         // Endpoints públicos
                         .requestMatchers(
                                 "/api/usuarios/login",
-                                "/api/usuarios",
-                                "context-path/**"
+                                "/swagger-ui/**",
+                                "/v3/**",
+                                "/swagger-ui.html",
+                                "/webjars/**"
                         ).permitAll()
 
                         // Leitura pública

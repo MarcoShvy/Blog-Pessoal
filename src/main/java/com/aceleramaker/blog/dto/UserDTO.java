@@ -2,12 +2,14 @@ package com.aceleramaker.blog.dto;
 
 import com.aceleramaker.blog.model.enums.TipoUsuario;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class UserDTO {
 
     private Long id;

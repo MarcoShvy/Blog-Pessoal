@@ -5,6 +5,7 @@ import com.aceleramaker.blog.dto.UsuarioLogin;
 import com.aceleramaker.blog.exception.user.UsuarioJaCadastradoException;
 import com.aceleramaker.blog.model.User;
 import com.aceleramaker.blog.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,9 +26,10 @@ public class UserController {
     }
 
     @PostMapping()
-    public ResponseEntity<Object> cadastrarUsuario(@RequestBody User usuario) {
+    public ResponseEntity<Object> cadastrarUsuarioDTO(@Valid @RequestBody UserDTO userDTO) {
         try {
-            User novoUsuario = userService.cadastrarUsuario(usuario).orElseThrow();
+            User user = userService.fromDTO(userDTO);
+            User novoUsuario = userService.cadastrarUsuario(user).orElseThrow();
             UserDTO dto = userService.toDTO(novoUsuario);
             return ResponseEntity.status(HttpStatus.CREATED).body(dto);
         } catch (UsuarioJaCadastradoException ex) {

@@ -5,8 +5,10 @@ import com.aceleramaker.blog.exception.tema.TemaNaoEncontradoException;
 import com.aceleramaker.blog.exception.user.AutenticacaoException;
 import com.aceleramaker.blog.exception.user.UsuarioJaCadastradoException;
 import com.aceleramaker.blog.exception.user.UsuarioNaoEncontradoException;
+import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolationException;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClass;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -21,8 +23,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
+@ConditionalOnMissingClass("org.springdoc.core.service.OpenApiService")
 public class GlobalExceptionHandler {
 
+    @Hidden
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<StandardError> handleEntityNotFound(EntityNotFoundException ex) {
         StandardError error = new StandardError(

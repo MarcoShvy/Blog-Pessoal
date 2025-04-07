@@ -1,6 +1,7 @@
 package com.aceleramaker.blog.repository;
 
 import com.aceleramaker.blog.model.User;
+import com.aceleramaker.blog.model.enums.TipoUsuario;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ class UserRepositoryTest {
         user.setSenha("123456");
         user.setNome("Marco");
         user.setFoto("foto.png");
+        user.setTipoUsuario(TipoUsuario.ADMIN);
 
         userRepository.save(user);
 
@@ -40,6 +42,8 @@ class UserRepositoryTest {
         user.setUsuario("teste");
         user.setSenha("123");
         user.setNome("Teste");
+        user.setTipoUsuario(TipoUsuario.ADMIN);
+        user.setPostagems(null);
 
         userRepository.save(user);
 
