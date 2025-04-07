@@ -8,8 +8,8 @@
 		<version>3.4.4</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.AceleraMaker</groupId>
-	<artifactId>Blog</artifactId>
+	<groupId>com.aceleramaker</groupId>
+	<artifactId>blog</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Blog</name>
 	<description>Demo project for Spring Boot</description>
