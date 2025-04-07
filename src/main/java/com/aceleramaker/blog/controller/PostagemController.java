@@ -5,7 +5,6 @@ import com.aceleramaker.blog.dto.PostagemResponseDTO;
 import com.aceleramaker.blog.model.Postagem;
 import com.aceleramaker.blog.service.PostagemService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,8 +16,13 @@ import java.util.Map;
 @RequestMapping("/api/postagens/")
 public class PostagemController {
 
-    @Autowired
     private PostagemService postagemService;
+
+    public PostagemController(PostagemService postagemService) {
+        this.postagemService = postagemService;
+    }
+
+    public PostagemController() {}
 
     @GetMapping
     public ResponseEntity<List<Postagem>> listarTodas() {

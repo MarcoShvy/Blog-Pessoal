@@ -14,8 +14,6 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -60,7 +58,7 @@ class JwtFilterTest {
         SecurityContextHolder.clearContext(); // garantir contexto limpo
 
         when(request.getHeader("Authorization")).thenReturn("Bearer tokenInvalido");
-        when(jwtService.isTokenValid(eq("tokenInvalido"))).thenReturn(false);
+        when(jwtService.isTokenValid("tokenInvalido")).thenReturn(false);
 
         jwtFilter.doFilterInternal(request, response, filterChain);
 

@@ -123,7 +123,7 @@ public class PostagemService {
 
     public List<PostagemResponseDTO> toResponseDTOList(List<Postagem> postagens) {
         return postagens.stream()
-                .map(this::toResponseDTO).collect(Collectors.toList());
+                .map(this::toResponseDTO).toList();
     }
 
     private User getUsuarioAutenticado() {

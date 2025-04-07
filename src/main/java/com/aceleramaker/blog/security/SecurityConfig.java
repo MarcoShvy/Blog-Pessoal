@@ -16,8 +16,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private JwtFilter jwtFilter;
-    private static final String comum = "COMUM";
-    private static final String admin = "ADMIN";
+    private static final String COMUM = "COMUM";
+    private static final String ADMIN = "ADMIN";
     private static final String LINK_MAP_POSTAGENS = "/api/postagens/**";
     private static final String LINK_MAP_TEMAS = "/api/temas/**";
 
@@ -49,9 +49,9 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, LINK_MAP_POSTAGENS, LINK_MAP_TEMAS).permitAll()
 
                         // Criação, edição e deleção: permitido para USER e ADMIN
-                        .requestMatchers(HttpMethod.POST, LINK_MAP_POSTAGENS, LINK_MAP_TEMAS).hasAnyRole(comum, admin)
-                        .requestMatchers(HttpMethod.PUT, LINK_MAP_POSTAGENS, LINK_MAP_TEMAS).hasAnyRole(comum, admin)
-                        .requestMatchers(HttpMethod.DELETE, LINK_MAP_POSTAGENS, LINK_MAP_TEMAS).hasAnyRole(comum, admin)
+                        .requestMatchers(HttpMethod.POST, LINK_MAP_POSTAGENS, LINK_MAP_TEMAS).hasAnyRole(COMUM, ADMIN)
+                        .requestMatchers(HttpMethod.PUT, LINK_MAP_POSTAGENS, LINK_MAP_TEMAS).hasAnyRole(COMUM, ADMIN)
+                        .requestMatchers(HttpMethod.DELETE, LINK_MAP_POSTAGENS, LINK_MAP_TEMAS).hasAnyRole(COMUM, ADMIN)
 
                         // Outros endpoints exigem autenticação
                         .anyRequest().authenticated()

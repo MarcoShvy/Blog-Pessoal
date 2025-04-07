@@ -43,7 +43,7 @@ public class PostagemResponseDTO {
         return texto;
     }
 
-    public void setTexto(String conteudo) {
+    public void setTexto(String texto) {
         this.texto = texto;
     }
 

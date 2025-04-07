@@ -8,7 +8,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class SecurityConfigTest {
+class SecurityConfigTest {
 
     private JwtFilter jwtFilter;
     private SecurityConfig securityConfig;
