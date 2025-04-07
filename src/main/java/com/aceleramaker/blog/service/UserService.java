@@ -107,14 +107,17 @@ public class UserService {
                 .nome(dto.getNome())
                 .usuario(dto.getUsuario())
                 .senha(dto.getSenha())
+                .foto(dto.getFoto())
+                .tipoUsuario(dto.getTipoUsuario())
                 .build();
     }
 
     public UserDTO toDTO(User user) {
         return UserDTO.builder()
-                .id(user.getId())
                 .nome(user.getNome())
                 .usuario(user.getUsuario())
+                .foto(user.getFoto())
+                .tipoUsuario(user.getTipoUsuario())
                 .build();
     }
 }

@@ -13,7 +13,7 @@ import java.util.Map;
 
 
 @RestController
-@RequestMapping("/api/temas/")
+@RequestMapping("/api/temas")
 public class TemaController {
 
     private final TemaService temaService;

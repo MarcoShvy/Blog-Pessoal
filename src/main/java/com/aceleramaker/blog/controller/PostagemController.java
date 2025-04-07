@@ -5,6 +5,7 @@ import com.aceleramaker.blog.dto.PostagemResponseDTO;
 import com.aceleramaker.blog.model.Postagem;
 import com.aceleramaker.blog.service.PostagemService;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,11 +14,12 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/postagens/")
+@RequestMapping("/api/postagens")
 public class PostagemController {
 
     private PostagemService postagemService;
 
+    @Autowired
     public PostagemController(PostagemService postagemService) {
         this.postagemService = postagemService;
     }
@@ -29,7 +31,7 @@ public class PostagemController {
         return ResponseEntity.ok(postagemService.listarTodas());
     }
 
-    @GetMapping("filtro")
+    @GetMapping("/filtro")
     public ResponseEntity<List<PostagemResponseDTO>> filtrar(
             @RequestParam(required = false) Long autor,
             @RequestParam(required = false) Long tema) {
