@@ -14,7 +14,7 @@ import java.util.Map;
 
 
 @RestController
-@RequestMapping("/api/usuarios/")
+@RequestMapping("/api/usuarios")
 public class UserController {
 
 
@@ -35,19 +35,19 @@ public class UserController {
         }
     }
 
-    @PostMapping("login")
+    @PostMapping("/login")
     public ResponseEntity<Object> login(@RequestBody UsuarioLogin userLogin) {
         UsuarioLogin usuarioAutenticado = userService.autenticarUsuario(userLogin).orElseThrow();
         return ResponseEntity.ok(usuarioAutenticado);
     }
 
-    @PutMapping("{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Object> atualizar(@PathVariable Long id, @RequestBody UserDTO user) {
         User usuarioAtualizado = userService.atualizarUsuario(id, user).orElseThrow();
         return ResponseEntity.status(HttpStatus.OK).body(usuarioAtualizado);
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Map<String, String>> deletarUsuario(@PathVariable Long id) {
         userService.deletarUsuario(id);
 
