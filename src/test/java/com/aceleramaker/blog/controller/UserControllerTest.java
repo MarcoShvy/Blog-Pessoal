@@ -6,14 +6,22 @@ import com.aceleramaker.blog.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -22,13 +30,17 @@ class UserControllerTest {
 
     private MockMvc mockMvc;
 
+    @InjectMocks
+    private UserController userController;
+    @Mock
     private UserService userService;
+
 
     @BeforeEach
     void setUp() {
         userService = Mockito.mock(UserService.class);
 
-        UserController userController = new UserController(userService);
+        UserController userController = new UserController(userService); //NOSONAR
         mockMvc = MockMvcBuilders.standaloneSetup(userController).build();
     }
 
@@ -42,8 +54,8 @@ class UserControllerTest {
         dto.setUsuario("joao");
         dto.setNome("João da Silva");
 
-        Mockito.when(userService.cadastrarUsuario(Mockito.any())).thenReturn(Optional.of(user));
-        Mockito.when(userService.toDTO(Mockito.any())).thenReturn(dto);
+        when(userService.cadastrarUsuario(Mockito.any())).thenReturn(Optional.of(user));
+        when(userService.toDTO(Mockito.any())).thenReturn(dto);
 
         mockMvc.perform(post("/api/usuarios") // <- com barra se estiver no controller
                         .contentType(MediaType.APPLICATION_JSON)
@@ -58,4 +70,19 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.usuario").value("joao"))
                 .andExpect(jsonPath("$.nome").value("João da Silva"));
     }
+
+    @Test
+    void testDeletarComSucesso() {
+        Long userId = 1L;
+
+        // Nenhuma exceção é lançada
+        lenient().doNothing().when(userService).deletarUsuario(userId);
+
+        ResponseEntity<Map<String, String>> response = userController.deletarUsuario(userId);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        lenient().doNothing().when(userService).deletarUsuario(userId);
+        assertEquals("Usuário deletado com sucesso", Objects.requireNonNull(response.getBody()).get("mensagem"));
+    }
+
 }

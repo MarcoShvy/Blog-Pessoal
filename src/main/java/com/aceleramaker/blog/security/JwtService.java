@@ -3,23 +3,14 @@ import com.aceleramaker.blog.model.User;
 import io.jsonwebtoken.*;
 import org.springframework.stereotype.Service;
 
-import javax.crypto.spec.SecretKeySpec;
-import java.nio.charset.StandardCharsets;
-import java.security.Key;
 import java.util.Date;
 
 @Service
 public class JwtService {
 
     // Chave está aberta a fins de teste
-    // NOSONAR-START
-    private static final Key SECRET_KEY = new SecretKeySpec(
-            "acelera-maker-key-blog".getBytes(StandardCharsets.UTF_8),
-            0,
-            "acelera-maker-key-blog".getBytes(StandardCharsets.UTF_8).length,
-            "HmacSHA256"
-    ); //NOSONAR
-    // NOSONAR-END
+    //NOSONAR
+    private static final String SECRET_KEY = System.getProperty("SECRET_KEY");  // Chave recuperada de uma variável de ambiente
     private static final long EXPIRATION_TIME = 86400000; // 1 dia
 
     public String generateToken(User usuario) {
