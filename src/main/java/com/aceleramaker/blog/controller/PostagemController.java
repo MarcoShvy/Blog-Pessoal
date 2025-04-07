@@ -48,13 +48,13 @@ public class PostagemController {
         return ResponseEntity.ok(postagemService.toResponseDTO(postagem));
     }
 
-    @PutMapping("{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<PostagemResponseDTO> atualizar(@PathVariable Long id, @Valid @RequestBody PostagemDTO dto) {
         Postagem postagemAtualizada = postagemService.atualizar(id, dto);
         return ResponseEntity.ok(postagemService.toResponseDTO(postagemAtualizada));
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Map<String, String>> deletar(@PathVariable Long id) {
         postagemService.deletar(id);
         Map<String, String> resposta = new HashMap<>();
