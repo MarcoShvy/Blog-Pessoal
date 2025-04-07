@@ -9,6 +9,15 @@ public class TemaDTO {
     @NotBlank(message = "A descrição é obrigatória")
     private String descricao;
 
+
+    public TemaDTO() {
+    }
+
+    public TemaDTO(Long id, String descricao) {
+        this.id = id;
+        this.descricao = descricao;
+    }
+
     // Getters e Setters
     public Long getId() {
         return id;
