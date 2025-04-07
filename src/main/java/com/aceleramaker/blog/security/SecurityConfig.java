@@ -42,7 +42,8 @@ public class SecurityConfig {
                         // Endpoints públicos
                         .requestMatchers(
                                 "/api/usuarios/login",
-                                "/api/usuarios"
+                                "/api/usuarios",
+                                "context-path/**"
                         ).permitAll()
 
                         // Leitura pública
