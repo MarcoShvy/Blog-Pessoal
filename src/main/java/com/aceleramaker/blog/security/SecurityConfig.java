@@ -16,8 +16,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private JwtFilter jwtFilter;
-    private final String comum = "COMUM";
-    private final String admin = "ADMIN";
+    private final static String comum = "COMUM";
+    private final static String admin = "ADMIN";
+    private static final String LINK_MAP_POSTAGENS = "/api/postagens/**";
+    private static final String LINK_MAP_TEMAS = "/api/temas/**";
 
     public SecurityConfig (JwtFilter jwtFilter) {
         this.jwtFilter = jwtFilter;
@@ -44,12 +46,12 @@ public class SecurityConfig {
                         ).permitAll()
 
                         // Leitura pública
-                        .requestMatchers(HttpMethod.GET, "/api/postagens/**", "/api/temas/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, LINK_MAP_POSTAGENS, LINK_MAP_TEMAS).permitAll()
 
                         // Criação, edição e deleção: permitido para USER e ADMIN
-                        .requestMatchers(HttpMethod.POST, "/api/postagens/**", "/api/temas/**").hasAnyRole(comum, admin)
-                        .requestMatchers(HttpMethod.PUT, "/api/postagens/**", "/api/temas/**").hasAnyRole(comum, admin)
-                        .requestMatchers(HttpMethod.DELETE, "/api/postagens/**", "/api/temas/**").hasAnyRole(comum, admin)
+                        .requestMatchers(HttpMethod.POST, LINK_MAP_POSTAGENS, LINK_MAP_TEMAS).hasAnyRole(comum, admin)
+                        .requestMatchers(HttpMethod.PUT, LINK_MAP_POSTAGENS, LINK_MAP_TEMAS).hasAnyRole(comum, admin)
+                        .requestMatchers(HttpMethod.DELETE, LINK_MAP_POSTAGENS, LINK_MAP_TEMAS).hasAnyRole(comum, admin)
 
                         // Outros endpoints exigem autenticação
                         .anyRequest().authenticated()
