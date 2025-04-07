@@ -16,8 +16,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private JwtFilter jwtFilter;
-    private final static String comum = "COMUM";
-    private final static String admin = "ADMIN";
+    private static final String comum = "COMUM";
+    private static final String admin = "ADMIN";
     private static final String LINK_MAP_POSTAGENS = "/api/postagens/**";
     private static final String LINK_MAP_TEMAS = "/api/temas/**";
 
