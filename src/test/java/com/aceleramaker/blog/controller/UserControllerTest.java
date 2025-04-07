@@ -2,9 +2,7 @@ package com.aceleramaker.blog.controller;
 
 import com.aceleramaker.blog.dto.UserDTO;
 import com.aceleramaker.blog.model.User;
-import com.aceleramaker.blog.model.enums.TipoUsuario;
 import com.aceleramaker.blog.service.UserService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

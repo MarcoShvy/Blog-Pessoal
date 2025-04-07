@@ -35,8 +35,8 @@ class GlobalExceptionHandlerTest {
         EntityNotFoundException ex = new EntityNotFoundException("Entidade não encontrada");
         ResponseEntity<StandardError> response = handler.handleEntityNotFound(ex);
 
-        assertEquals(404, response.getStatusCodeValue());
-        assertEquals("Recurso não encontrado", response.getBody().getError());
+        assertEquals(404, response.getStatusCode().value());
+        assertEquals("Recurso não encontrado", Objects.requireNonNull(response.getBody()).getError());
     }
 
     @Test
@@ -48,8 +48,8 @@ class GlobalExceptionHandlerTest {
         MethodArgumentNotValidException ex = new MethodArgumentNotValidException(null, bindingResult);
 
         ResponseEntity<Map<String, String>> response = handler.handleValidationErrors(ex);
-        assertEquals(400, response.getStatusCodeValue());
-        assertTrue(response.getBody().containsKey("campo"));
+        assertEquals(400, response.getStatusCode().value());
+        assertTrue(Objects.requireNonNull(response.getBody()).containsKey("campo"));
     }
 
     @Test
@@ -67,8 +67,8 @@ class GlobalExceptionHandlerTest {
         ConstraintViolationException ex = new ConstraintViolationException(violations);
         ResponseEntity<Map<String, String>> response = handler.handleConstraintViolation(ex);
 
-        assertEquals(400, response.getStatusCodeValue());
-        assertTrue(response.getBody().containsKey("campoInvalido"));
+        assertEquals(400, response.getStatusCode().value());
+        assertTrue(Objects.requireNonNull(response.getBody()).containsKey("campoInvalido"));
         assertEquals("mensagem de erro", response.getBody().get("campoInvalido"));
     }
 
@@ -77,8 +77,8 @@ class GlobalExceptionHandlerTest {
         Exception ex = new Exception("Erro genérico");
         ResponseEntity<StandardError> response = handler.handleGenericException(ex);
 
-        assertEquals(500, response.getStatusCodeValue());
-        assertEquals("Erro interno", response.getBody().getError());
+        assertEquals(500, response.getStatusCode().value());
+        assertEquals("Erro interno", Objects.requireNonNull(response.getBody()).getError());
     }
 
     @Test
@@ -86,8 +86,8 @@ class GlobalExceptionHandlerTest {
         UsuarioJaCadastradoException ex = new UsuarioJaCadastradoException("Usuário já existe");
         ResponseEntity<StandardError> response = handler.handleUsuarioJaExiste(ex);
 
-        assertEquals(400, response.getStatusCodeValue());
-        assertEquals("Cadastro inválido", response.getBody().getError());
+        assertEquals(400, response.getStatusCode().value());
+        assertEquals("Cadastro inválido", Objects.requireNonNull(response.getBody()).getError());
     }
 
     @Test
@@ -95,8 +95,8 @@ class GlobalExceptionHandlerTest {
         UsuarioNaoEncontradoException ex = new UsuarioNaoEncontradoException("Não encontrado");
         ResponseEntity<StandardError> response = handler.handleNaoEncontrado(ex);
 
-        assertEquals(404, response.getStatusCodeValue());
-        assertEquals("Usuario não encontrado", response.getBody().getError());
+        assertEquals(404, response.getStatusCode().value());
+        assertEquals("Usuario não encontrado", Objects.requireNonNull(response.getBody()).getError());
     }
 
     @Test
@@ -104,8 +104,8 @@ class GlobalExceptionHandlerTest {
         AutenticacaoException ex = new AutenticacaoException("Falha");
         ResponseEntity<StandardError> response = handler.handleAutenticacao(ex);
 
-        assertEquals(401, response.getStatusCodeValue());
-        assertEquals("Falha de autenticação", response.getBody().getError());
+        assertEquals(401, response.getStatusCode().value());
+        assertEquals("Falha de autenticação", Objects.requireNonNull(response.getBody()).getError());
     }
 
     @Test
@@ -113,8 +113,8 @@ class GlobalExceptionHandlerTest {
         TemaNaoEncontradoException ex = new TemaNaoEncontradoException("Tema não existe");
         ResponseEntity<StandardError> response = handler.handleTemaNaoEncontrado(ex);
 
-        assertEquals(404, response.getStatusCodeValue());
-        assertEquals("Tema não encontrado", response.getBody().getError());
+        assertEquals(404, response.getStatusCode().value());
+        assertEquals("Tema não encontrado", Objects.requireNonNull(response.getBody()).getError());
     }
 
     @Test
@@ -122,7 +122,7 @@ class GlobalExceptionHandlerTest {
         PostagemNaoEncontradaException ex = new PostagemNaoEncontradaException("Postagem não encontrada");
         ResponseEntity<String> response = handler.handlePostagemNotFound(ex);
 
-        assertEquals(404, response.getStatusCodeValue());
+        assertEquals(404, response.getStatusCode().value());
         assertEquals("Postagem não encontrada", response.getBody());
     }
 
@@ -131,7 +131,7 @@ class GlobalExceptionHandlerTest {
         SecurityException ex = new SecurityException("Acesso negado");
         ResponseEntity<String> response = handler.handleSecurityException(ex);
 
-        assertEquals(403, response.getStatusCodeValue());
+        assertEquals(403, response.getStatusCode().value());
         assertEquals("Acesso negado", response.getBody());
     }
 }
