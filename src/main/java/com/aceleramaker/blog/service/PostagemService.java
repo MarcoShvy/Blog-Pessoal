@@ -92,7 +92,7 @@ public class PostagemService {
         return postagemRepository.save(postagemExistente);
     }
 
-    public boolean deletar(Long id) {
+    public void deletar(Long id) {
         Postagem postagem = postagemRepository.findById(id)
                 .orElseThrow(() -> new PostagemNaoEncontradaException("Postagem com ID " + id + " não encontrada"));
 
@@ -106,8 +106,8 @@ public class PostagemService {
         }
 
         postagemRepository.deleteById(id);
-        return true;
     }
+
 
 
     public PostagemResponseDTO toResponseDTO(Postagem postagem) {

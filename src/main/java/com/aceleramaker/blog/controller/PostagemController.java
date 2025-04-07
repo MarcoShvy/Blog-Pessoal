@@ -51,10 +51,8 @@ public class PostagemController {
     @DeleteMapping("{id}")
     public ResponseEntity<Map<String, String>> deletar(@PathVariable Long id) {
         postagemService.deletar(id);
-
         Map<String, String> resposta = new HashMap<>();
         resposta.put("mensagem", "Postagem deletada com sucesso");
-
         return ResponseEntity.ok(resposta);
     }
 }

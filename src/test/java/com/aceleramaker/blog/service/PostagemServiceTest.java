@@ -119,13 +119,15 @@ class PostagemServiceTest {
         admin.setTipoUsuario(TipoUsuario.ADMIN);
         admin.setUsuario("admin");
 
-        mockUsuarioAutenticado(admin);
+        mockUsuarioAutenticado(admin); // simula usuário autenticado como admin
 
         when(postagemRepository.findById(1L)).thenReturn(Optional.of(postagem));
         when(userRepository.findByUsuario("admin")).thenReturn(Optional.of(admin));
 
-        boolean resultado = postagemService.deletar(1L);
-        assertTrue(resultado);
+        // A chamada real
+        postagemService.deletar(1L);
+
+        // Verifica se o método de deleção foi chamado corretamente
         verify(postagemRepository).deleteById(1L);
     }
 

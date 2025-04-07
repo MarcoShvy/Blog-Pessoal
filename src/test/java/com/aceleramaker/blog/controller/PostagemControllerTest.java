@@ -97,10 +97,11 @@ class PostagemControllerTest {
 
     @Test
     void deveDeletarPostagem() throws Exception {
-        when(postagemService.deletar(1L)).thenReturn(true);
+        doNothing().when(postagemService).deletar(1L);
 
         mockMvc.perform(delete("/api/postagens/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.mensagem").value("Postagem deletada com sucesso"));
     }
+
 }
