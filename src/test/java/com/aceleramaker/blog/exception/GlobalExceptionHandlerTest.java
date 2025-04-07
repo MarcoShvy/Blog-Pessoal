@@ -11,6 +11,7 @@ import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Path;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClass;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.validation.BindingResult;
@@ -21,6 +22,7 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+@ConditionalOnMissingClass("org.springdoc.core.service.OpenApiService")
 class GlobalExceptionHandlerTest {
 
     private GlobalExceptionHandler handler;
