@@ -27,7 +27,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf(csrf -> csrf.disable())
+                // SonarQube: CSRF desabilitado pois usamos JWT e a API é stateless
+                .csrf(csrf -> csrf.disable()) //NOSONAR
                 .headers(headers -> headers
                         .defaultsDisabled()
                         .frameOptions(frame -> frame.sameOrigin())
