@@ -42,4 +42,5 @@ public class User {
     @JsonIgnoreProperties("usuario")
     @JsonIgnore
     private List<Postagem> postagems;
+
 }
