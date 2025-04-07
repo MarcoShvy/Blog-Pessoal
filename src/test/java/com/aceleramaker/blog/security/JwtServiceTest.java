@@ -21,7 +21,7 @@ class JwtServiceTest {
     @BeforeAll
     static void setup() {
         System.setProperty("SECRET_KEY", "acelera-maker-key-blog-key");
-
+        System.getProperty("SECRET_KEY");
     }
 
     @Test
