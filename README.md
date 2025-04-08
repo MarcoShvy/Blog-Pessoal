@@ -93,6 +93,16 @@ spring.datasource.username=postgres
 spring.datasource.password=123456
 spring.jpa.hibernate.ddl-auto=update
 ```
+### Caso queira subir com docker
+
+```
+docker run --name postgres-container \
+  -e POSTGRES_DB=blog_pessoal \
+  -e POSTGRES_USER=postgres \
+  -e POSTGRES_PASSWORD=123456 \
+  -p 5432:5432 \
+  -d postgres
+```
 
 ### 🔍 3. Suba o SonarQube com Docker
 ```bash
