@@ -88,7 +88,7 @@ cd Blog-Pessoal
 ### 🐘 2. Suba o banco de dados PostgreSQL
 ### ⚙️ Configure o banco de dados da aplicação
 ```properties
-spring.datasource.url=jdbc:postgresql://localhost:5432/sonarqube
+spring.datasource.url=jdbc:postgresql://localhost:5432/blog_pessoal
 spring.datasource.username=postgres
 spring.datasource.password=123456
 spring.jpa.hibernate.ddl-auto=update
