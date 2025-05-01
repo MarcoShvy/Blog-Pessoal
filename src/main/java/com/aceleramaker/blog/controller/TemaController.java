@@ -14,6 +14,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/temas")
+@CrossOrigin(origins = "*")
 public class TemaController {
 
     private final TemaService temaService;

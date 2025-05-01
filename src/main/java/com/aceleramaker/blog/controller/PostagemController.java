@@ -15,6 +15,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/postagens")
+@CrossOrigin(origins = "*")
 public class PostagemController {
 
     private PostagemService postagemService;
