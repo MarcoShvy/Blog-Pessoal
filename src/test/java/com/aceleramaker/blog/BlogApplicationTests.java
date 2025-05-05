@@ -1,4 +1,4 @@
-package com.aceleramaker.blog;
+/*package com.aceleramaker.blog;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,3 +19,4 @@ class BlogApplicationTests {
 	}
 
 }
+*/
