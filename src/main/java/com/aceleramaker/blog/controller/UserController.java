@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -24,6 +25,13 @@ public class UserController {
 
     public UserController(UserService userService) {
         this.userService = userService;
+    }
+
+
+    @GetMapping
+    public ResponseEntity<List<UserDTO>> listarTodosUsuarios() {
+        List<UserDTO> usuarios = userService.listarTodos();
+        return ResponseEntity.ok(usuarios);
     }
 
     @PostMapping()

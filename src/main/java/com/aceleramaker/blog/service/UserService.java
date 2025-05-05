@@ -16,7 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -38,6 +40,15 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+
+    public List<UserDTO> listarTodos() {
+        return userRepository.findAll()
+                .stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
+    }
+
+
     // Cadastrar usuário
     public Optional<User> cadastrarUsuario(User usuario) {
         if (userRepository.existsByUsuario(usuario.getUsuario())) {
@@ -57,7 +68,15 @@ public class UserService {
         }
 
         String token = jwtService.generateToken(usuario.get());
-        UsuarioLogin autenticado = new UsuarioLogin(userLogin.usuario(), null, token);
+
+
+        UsuarioLogin autenticado = new UsuarioLogin(
+                userLogin.usuario(),
+                null,
+                token,
+                usuario.get().getId()
+        );
+
         return Optional.of(autenticado);
     }
 

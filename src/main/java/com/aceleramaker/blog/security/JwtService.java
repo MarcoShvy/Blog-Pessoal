@@ -30,12 +30,14 @@ public class JwtService {
     public String generateToken(User usuario) {
         return Jwts.builder()
                 .setSubject(usuario.getUsuario())
-                .claim("role", usuario.getTipoUsuario().name())
+                // Alterar "role" para "authorities" e garantir que seja uma lista
+                .claim("authorities", new String[]{"ROLE_" + usuario.getTipoUsuario().name()})
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
     }
+
 
     public boolean isTokenValid(String token) {
         try {

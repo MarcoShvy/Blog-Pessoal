@@ -7,7 +7,7 @@ public class PostagemResponseDTO {
     private String titulo;
     private String texto;
     private LocalDateTime dataCriacao;
-    private String nomeAutor;
+    private String nome;
     private String nomeTema;
 
     // Construtores
@@ -18,7 +18,7 @@ public class PostagemResponseDTO {
         this.titulo = titulo;
         this.texto = texto;
         this.dataCriacao = dataCriacao;
-        this.nomeAutor = nomeAutor;
+        this.nome = nomeAutor;
         this.nomeTema = nomeTema;
     }
 
@@ -56,11 +56,11 @@ public class PostagemResponseDTO {
     }
 
     public String getNomeAutor() {
-        return nomeAutor;
+        return nome;
     }
 
     public void setNomeAutor(String nomeAutor) {
-        this.nomeAutor = nomeAutor;
+        this.nome = nomeAutor;
     }
 
     public String getNomeTema() {

@@ -12,10 +12,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/postagens")
-@CrossOrigin(origins = "*")
 public class PostagemController {
 
     private PostagemService postagemService;
@@ -27,10 +28,19 @@ public class PostagemController {
 
     public PostagemController() {}
 
-    @GetMapping
+    @GetMapping("/")
     public ResponseEntity<List<Postagem>> listarTodas() {
         return ResponseEntity.ok(postagemService.listarTodas());
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<PostagemResponseDTO> getPostagemById(@PathVariable Long id) {
+        Postagem postagem = postagemService.buscarPostagem(id);
+        PostagemResponseDTO postagemDTO = postagemService.toResponseDTO(postagem);
+        return ResponseEntity.ok(postagemDTO);
+    }
+
+
 
     @GetMapping("/filtro")
     public ResponseEntity<List<PostagemResponseDTO>> filtrar(
@@ -43,7 +53,7 @@ public class PostagemController {
         return ResponseEntity.ok(resposta);
     }
 
-    @PostMapping
+    @PostMapping("/")
     public ResponseEntity<PostagemResponseDTO> criar(@Valid @RequestBody PostagemDTO dto) {
         Postagem postagem = postagemService.criar(dto);
         return ResponseEntity.ok(postagemService.toResponseDTO(postagem));

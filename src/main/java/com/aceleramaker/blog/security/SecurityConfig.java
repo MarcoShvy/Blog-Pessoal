@@ -19,7 +19,7 @@ public class SecurityConfig {
     private static final String COMUM = "COMUM";
     private static final String ADMIN = "ADMIN";
     private static final String LINK_MAP_POSTAGENS = "/api/postagens/**";
-    private static final String LINK_MAP_TEMAS = "/api/temas/**";
+    private static final String LINK_MAP_TEMAS = "/api/temas";
 
     public SecurityConfig (JwtFilter jwtFilter) {
         this.jwtFilter = jwtFilter;
@@ -29,6 +29,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
+
                 // SonarQube: CSRF desabilitado pois usamos JWT e a API é stateless
                 .csrf(csrf -> csrf.disable()) //NOSONAR
                 .headers(headers -> headers
@@ -41,7 +42,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // Endpoints públicos
                         .requestMatchers(
-                                "api/usuarios",
+                                "/api/postagens/**",
+                                "/api/temas",
+                                "/api/usuarios",
                                 "/api/usuarios/login",
                                 "/swagger-ui/**",
                                 "/v3/**",
@@ -49,14 +52,7 @@ public class SecurityConfig {
                                 "/webjars/**"
                         ).permitAll()
 
-                        // Leitura pública
-                        .requestMatchers(HttpMethod.GET, LINK_MAP_POSTAGENS, LINK_MAP_TEMAS).permitAll()
-
-                        // Criação, edição e deleção: permitido para USER e ADMIN
-                        .requestMatchers(HttpMethod.POST, LINK_MAP_POSTAGENS, LINK_MAP_TEMAS).hasAnyRole(COMUM, ADMIN)
-                        .requestMatchers(HttpMethod.PUT, LINK_MAP_POSTAGENS, LINK_MAP_TEMAS).hasAnyRole(COMUM, ADMIN)
-                        .requestMatchers(HttpMethod.DELETE, LINK_MAP_POSTAGENS, LINK_MAP_TEMAS).hasAnyRole(COMUM, ADMIN)
-
+                        .requestMatchers(HttpMethod.DELETE, "/api/postagens/**").authenticated()
                         // Outros endpoints exigem autenticação
                         .anyRequest().authenticated()
                 )

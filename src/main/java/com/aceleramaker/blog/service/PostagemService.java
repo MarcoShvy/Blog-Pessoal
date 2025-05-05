@@ -108,6 +108,10 @@ public class PostagemService {
         postagemRepository.deleteById(id);
     }
 
+    public Postagem buscarPostagem(Long id) {
+        return postagemRepository.findById(id)
+                .orElseThrow(() -> new PostagemNaoEncontradaException("Postagem com ID " + id + " não encontrada."));
+    }
 
 
     public PostagemResponseDTO toResponseDTO(Postagem postagem) {

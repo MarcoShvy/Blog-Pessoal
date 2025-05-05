@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class UserDTO {
 
+
     private String nome;
     private String usuario;
     private String foto;

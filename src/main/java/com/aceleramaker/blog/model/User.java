@@ -41,4 +41,7 @@ public class User {
     @JsonIgnore
     private List<Postagem> postagems;
 
+    public Long getId() {
+        return id;
+    }
 }
