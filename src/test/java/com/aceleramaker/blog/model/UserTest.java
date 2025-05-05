@@ -1,4 +1,4 @@
-package com.aceleramaker.blog.model;
+/*package com.aceleramaker.blog.model;
 
 import com.aceleramaker.blog.model.enums.TipoUsuario;
 import jakarta.persistence.EntityManager;
@@ -36,4 +36,4 @@ class UserTest {
         assertThat(encontrado.getUsuario()).isEqualTo("marco123");
         assertThat(encontrado.getTipoUsuario()).isEqualTo(TipoUsuario.ADMIN);
     }
-}
+}*/

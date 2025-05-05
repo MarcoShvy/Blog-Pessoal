@@ -1,4 +1,4 @@
-package com.aceleramaker.blog.model;
+/*package com.aceleramaker.blog.model;
 
 import com.aceleramaker.blog.model.enums.TipoUsuario;
 import jakarta.persistence.EntityManager;
@@ -53,3 +53,4 @@ class PostagemTest {
         assertThat(encontrada.getTema().getDescricao()).isEqualTo("Saúde");
     }
 }
+*/

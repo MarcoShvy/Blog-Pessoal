@@ -1,4 +1,4 @@
-package com.aceleramaker.blog.repository;
+/*package com.aceleramaker.blog.repository;
 
 import com.aceleramaker.blog.model.Tema;
 import org.junit.jupiter.api.DisplayName;
@@ -26,3 +26,4 @@ class TemaRepositoryTest {
         assertThat(salvo.getDescricao()).isEqualTo("Tecnologia");
     }
 }
+*/

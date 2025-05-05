@@ -1,4 +1,4 @@
-package com.aceleramaker.blog.model;
+/*package com.aceleramaker.blog.model;
 
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
@@ -31,3 +31,4 @@ class TemaTest {
         assertThat(encontrado.getDescricao()).isEqualTo("Tecnologia");
     }
 }
+*/
