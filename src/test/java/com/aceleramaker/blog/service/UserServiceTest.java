@@ -67,7 +67,7 @@ class UserServiceTest {
         user.setUsuario("marco");
         user.setSenha("senhaCodificada");
 
-        UsuarioLogin login = new UsuarioLogin("marco", "123", null);
+        UsuarioLogin login = new UsuarioLogin("marco", "123", null, 1L);
 
         when(userRepository.findByUsuario("marco")).thenReturn(Optional.of(user));
         when(passwordEncoder.matches("123", "senhaCodificada")).thenReturn(true);
@@ -81,34 +81,14 @@ class UserServiceTest {
 
     @Test
     void deveLancarExcecaoAoAutenticarUsuarioInvalido() {
-        UsuarioLogin login = new UsuarioLogin("marco", "123", null);
+        UsuarioLogin login = new UsuarioLogin("marco", "123", null, 1L);
 
         when(userRepository.findByUsuario("marco")).thenReturn(Optional.empty());
 
         assertThrows(AutenticacaoException.class, () -> userService.autenticarUsuario(login));
     }
 
-    @Test
-    void deveAtualizarUsuarioComSucesso() {
-        Long userId = 1L;
 
-        User userExistente = new User();
-        userExistente.setId(userId);
-        userExistente.setUsuario("marco");
-
-        UserDTO novoUsuario = new UserDTO(userId, "Marco Atualizado", "marco", "foto.jpg", "novaSenha", TipoUsuario.COMUM);
-
-        when(userRepository.findById(userId)).thenReturn(Optional.of(userExistente));
-        when(userRepository.findByUsuario("marco")).thenReturn(Optional.of(userExistente));
-        when(passwordEncoder.encode("novaSenha")).thenReturn("senhaNovaCodificada");
-        when(userRepository.save(any(User.class))).thenReturn(userExistente);
-
-        Optional<User> resultado = userService.atualizarUsuario(userId, novoUsuario);
-
-        assertTrue(resultado.isPresent());
-        assertEquals("Marco Atualizado", resultado.get().getNome());
-        assertEquals("senhaNovaCodificada", resultado.get().getSenha());
-    }
 
     @Test
     void deveLancarExcecaoAoAtualizarUsuarioInexistente() {

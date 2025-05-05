@@ -36,7 +36,7 @@ class TemaControllerTest {
 
         when(temaService.criarTema(any(TemaDTO.class))).thenReturn(temaCriado);
 
-        mockMvc.perform(post("/api/temas/")
+        mockMvc.perform(post("/api/temas")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(tema)))
                 .andExpect(status().isCreated())
@@ -75,7 +75,7 @@ class TemaControllerTest {
 
         when(temaService.listarTodos()).thenReturn(temas);
 
-        mockMvc.perform(get("/api/temas/"))
+        mockMvc.perform(get("/api/temas"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.size()").value(2));
     }
