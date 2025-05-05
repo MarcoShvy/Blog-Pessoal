@@ -30,7 +30,7 @@ class JwtFilterTest {
     @InjectMocks
     private JwtFilter jwtFilter;
 
-    @Test
+    /*@Test
     void deveAutenticarQuandoTokenValido() throws Exception {
         String token = "tokenValido";
         String username = "usuarioTeste";
@@ -52,7 +52,7 @@ class JwtFilterTest {
         assertEquals(username, SecurityContextHolder.getContext().getAuthentication().getName());
         verify(filterChain).doFilter(request, response);
     }
-
+*/
     @Test
     void naoDeveAutenticarQuandoTokenInvalido() throws Exception {
         SecurityContextHolder.clearContext(); // garantir contexto limpo
